@@ -1,0 +1,77 @@
+body{
+	margin: 0 auto;
+	background-color: #BFBFBF;
+}
+#canvas_block{
+	display: inline-block;
+}
+#canvas{
+	background-color: #FFFFFF;
+	width: 40vw;
+	height: 40vw;
+}
+#control_block{
+	display: inline-block;
+	width: 24vw;
+	text-align: center;
+	vertical-align: top;
+	background-color: #FFFFFF;
+}
+#control_buttons_block{
+    margin: 0 auto;
+	width: 20vw;
+	height: 13vw;
+	background-color: #DDDDDD;
+}
+.control_buttons{
+	margin: 0 auto;
+	width: 4vw;
+	height: 4vw;
+	text-align: center;
+	border: 1px solid #444444;
+}
+#cube_left{
+	display: inline-block;
+	margin: 0vw 4vw 0vw 0vw;
+}
+#cube_right{
+	display: inline-block;
+}
+#new_cube{
+	margin: 0 auto;
+	margin-bottom: 2vw;
+	width: 5vw;
+	height: 3vw;
+	text-align: center;
+	border: 1px solid #444444;
+}
+#control_camera_block{
+    margin: 0 auto;
+    margin-top: 2vw;
+	width: 20vw;
+	height: 13vw;
+	background-color: #DDDDDD;
+}
+#camera_X_in, #camera_X_out, #camera_Y_in, #camera_Y_out, #camera_Z_in, #camera_Z_out{
+	display: inline-block;
+}
+
+#new_line_X, #new_line_Y, #new_line_Z, #rotate_X, #rotate_Y, #rotate_Z, #new_line_length{
+	display: inline-block;
+	margin: 0 auto;
+}
+.control_coordinates{
+
+}
+#update_X, #update_Y, #update_Z, #update_rotate_X, #update_rotate_Y, #update_rotate_Z, #update_length{
+	display: inline-block;
+}
+
+
+
+
+
+
+
+
+
