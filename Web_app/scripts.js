@@ -160,21 +160,19 @@ function send_coordinates(){
 }
 
 function send_data_to_arduino(coordinates_given){
-	var SerialPort = require("serialport").SerialPort;
-	var serialPort = new SerialPort('/dev/cu.usbmodem1411', { baudrate: 9600 });
+	
+	coordinates_given = "nice";
 
-	var on = "nice";
-
-	serialPort.on("open", function () {
-	    console.log('open');
-	    console.log('COORDINATES: '+coordinates_given);
-
-	    setTimeout(function() {
-	        serialPort.write(coordinates_given, function(err, results) {
-	            console.log('err ' + err);
-	            console.log('results ' + results);
-	        });
-	    }, 1600);
+	$.ajax({
+	    url: 'server.php',
+	    type: 'POST',
+	    data: {coordinates_given: coordinates_given},
+	    success: function( response ){
+	    	alert("SUCCESS: "+response);
+	    },
+	    error: function( response ){
+	    	alert("ERROR: "+response);
+	    }
 	});
 }
 
