@@ -112,11 +112,8 @@ function is_colliding(object_1, object_2){
 }
 
 function check_shape_collisions(object){
-	var collision;
-
-	for (var i = 1; i < shapes.length; i++){
-		collision = is_colliding(shapes[i], object);
-		if (collision){
+	for (var i = 0; i < shapes.length - 1; i++){
+		if ( is_colliding(shapes[i], object) ){
 			//shapes[i].material.color.setHex( 0x0000FF );
 			var material = new THREE.MeshBasicMaterial( {color: 0x0000FF, overdraw: 0.5} );
     		material.side = THREE.DoubleSide;
@@ -137,7 +134,7 @@ function show_result(){
 }
 
 function clear_result(){
-	for (var i = 1; i < shapes.length; i++){
+	for (var i = 0; i < shapes.length - 1; i++){
 		var material = new THREE.MeshBasicMaterial( { transparent: true, opacity: 0 } );
 		shapes[i].material = material;
 	}
@@ -151,6 +148,34 @@ function generate_coordinates(){
 		ss += ", ";
 	}
 	alert(ss);
+}
+
+function send_coordinates(){
+	var ss = "";
+	for (var i = 0; i < coordinates.length; i++){
+		ss += coordinates[i];
+		ss += ", ";
+	}
+	send_data_to_arduino(ss);
+}
+
+function send_data_to_arduino(coordinates_given){
+	var SerialPort = require("serialport").SerialPort;
+	var serialPort = new SerialPort('/dev/cu.usbmodem1411', { baudrate: 9600 });
+
+	var on = "nice";
+
+	serialPort.on("open", function () {
+	    console.log('open');
+	    console.log('COORDINATES: '+coordinates_given);
+
+	    setTimeout(function() {
+	        serialPort.write(coordinates_given, function(err, results) {
+	            console.log('err ' + err);
+	            console.log('results ' + results);
+	        });
+	    }, 1600);
+	});
 }
 
 function update_length(){
@@ -184,8 +209,8 @@ function rotate_line(axis){
 function create_new_shape(colour){
 
 	var size = 2;
-	var short = 1;
-	var long = 1.1;
+	var short = 2.1;//1
+	var long = 2.2;//1.1
 
 	var points = [
 		// X, Y, Z
@@ -207,7 +232,7 @@ function create_new_shape(colour){
 	var geometry = new THREE.ConvexGeometry( points );
 
 	//var shape = mesh(geometry, colour, 0xFFFFFF);
-	var shape = mesh_transparent(geometry, 0xFFFF00);
+	var shape = mesh_transparent(geometry, colour);
 	//var shape = mesh_empty(geometry);
 	shape.position.x = 0;
 	shape.position.y = 0;
@@ -217,15 +242,24 @@ function create_new_shape(colour){
 }
 
 function draw_shapes(position_y, rotation_y){
-	// draw 1st layer of shapes
-	var shape_1 = create_new_shape( random_colour() );
-	var shape_2 = create_new_shape( random_colour() );
-	var shape_3 = create_new_shape( random_colour() );
-	var shape_4 = create_new_shape( random_colour() );
-	var shape_5 = create_new_shape( random_colour() );
-	var shape_6 = create_new_shape( random_colour() );
-	var shape_7 = create_new_shape( random_colour() );
+	// draw line of shapes
+	var shape_0 = create_new_shape( 0xFFFF00 );
+	var shape_1 = create_new_shape( 0xFFFF00 );
+	var shape_2 = create_new_shape( 0xFFFF00 );
+	var shape_3 = create_new_shape( 0xFFFF00 );
+	var shape_4 = create_new_shape( 0xFFFF00 );
+	var shape_5 = create_new_shape( 0xFFFF00 );
+	var shape_6 = create_new_shape( 0xFFFF00 );
+	var shape_7 = create_new_shape( 0xFFFF00 );
+	var shape_8 = create_new_shape( 0xFFFF00 );
+	var shape_9 = create_new_shape( 0xFFFF00 );
+	var shape_10 = create_new_shape( 0xFFFF00 );
+	var shape_11 = create_new_shape( 0xFFFF00 );
+	var shape_12 = create_new_shape( 0xFFFF00 );
+	var shape_13 = create_new_shape( 0xFFFF00 );
+	var shape_14 = create_new_shape( 0xFFFF00 );
 
+	shapes.push(shape_0);
 	shapes.push(shape_1);
 	shapes.push(shape_2);
 	shapes.push(shape_3);
@@ -233,25 +267,49 @@ function draw_shapes(position_y, rotation_y){
 	shapes.push(shape_5);
 	shapes.push(shape_6);
 	shapes.push(shape_7);
+	shapes.push(shape_8);
+	shapes.push(shape_9);
+	shapes.push(shape_10);
+	shapes.push(shape_11);
+	shapes.push(shape_12);
+	shapes.push(shape_13);
+	shapes.push(shape_14);
 
 	var distance_from_center = 1;
 	var DISTANCE = 2;
 	var ROW = 1;
 
-	shape_1.position.x = distance_from_center;
-	shape_2.position.x = distance_from_center + DISTANCE * ROW;
+	shape_14.position.x = distance_from_center;
+	shape_13.position.x = distance_from_center + DISTANCE * ROW;
 	ROW++;
-	shape_3.position.x = distance_from_center + DISTANCE * ROW;
+	shape_12.position.x = distance_from_center + DISTANCE * ROW;
 	ROW++;
-	shape_4.position.x = distance_from_center + DISTANCE * ROW;
+	shape_11.position.x = distance_from_center + DISTANCE * ROW;
 	ROW++;
-	shape_5.position.x = distance_from_center + DISTANCE * ROW;
+	shape_10.position.x = distance_from_center + DISTANCE * ROW;
+	ROW++;
+	shape_9.position.x = distance_from_center + DISTANCE * ROW;
+	ROW++;
+	shape_8.position.x = distance_from_center + DISTANCE * ROW;
+	ROW++;
+	shape_7.position.x = distance_from_center + DISTANCE * ROW;
 	ROW++;
 	shape_6.position.x = distance_from_center + DISTANCE * ROW;
 	ROW++;
-	shape_7.position.x = distance_from_center + DISTANCE * ROW;
+	shape_5.position.x = distance_from_center + DISTANCE * ROW;
+	ROW++;
+	shape_4.position.x = distance_from_center + DISTANCE * ROW;
+	ROW++;
+	shape_3.position.x = distance_from_center + DISTANCE * ROW;
+	ROW++;
+	shape_2.position.x = distance_from_center + DISTANCE * ROW;
+	ROW++;
+	shape_1.position.x = distance_from_center + DISTANCE * ROW;
+	ROW++;
+	shape_0.position.x = distance_from_center + DISTANCE * ROW;
 
 	group = new THREE.Object3D();
+	group.add( shape_0 );
 	group.add( shape_1 );
 	group.add( shape_2 );
 	group.add( shape_3 );
@@ -259,6 +317,13 @@ function draw_shapes(position_y, rotation_y){
 	group.add( shape_5 );
 	group.add( shape_6 );
 	group.add( shape_7 );
+	group.add( shape_8 );
+	group.add( shape_9 );
+	group.add( shape_10 );
+	group.add( shape_11 );
+	group.add( shape_12 );
+	group.add( shape_13 );
+	group.add( shape_14 );
 
 	group.rotation.y = rotation_y;
 	group.position.y = position_y;
@@ -266,39 +331,40 @@ function draw_shapes(position_y, rotation_y){
 }
 
 function draw_environment(height){
+
 	// draw outer cylinder
-	var outer_cylinder = create_outer_cylinder(0xAA0000, 15, 15, height * 2, 44);
-	outer_cylinder.position.y = height;
-
-	var POSITION_ADD = 2;
-	var position_y = 1;
-
-	// draw 1st layer of central cylinder
-	for (var i = 0; i < height; i++){
-		var cylinder = create_cylinder(random_colour(), 1, 1, 2, 32);
-		cylinder.position.y = position_y;
-		position_y += POSITION_ADD;
-
-		shapes.push(cylinder);
-	}
+	var outer_cylinder = create_outer_cylinder(0xAA0000, 31, 31, height * 2, 44);
+	outer_cylinder.position.y = -height;
 
 	// 11 shapes in 1/4
 	// 90 degrees - 1.5686
 	var ROTATION_ANGLE = 0.1426;
-	var rotation_y = 0;
-	POSITION_ADD = 2;
-	position_y = 0;
+	var rotation_y;
+	var POSITION_ADD = -2;
+	var position_y = -2;
 
 	for (var k = 0; k < height; k++){
-		for (var i = 0; i < 2; i++){
+		rotation_y = 0;
+		for (var i = 0; i < 44; i++){
 			draw_shapes( position_y, rotation_y );
 			rotation_y += ROTATION_ANGLE;
 		}
 		position_y += POSITION_ADD;
 	}
+
+	position_y = -1;
+
+	// draw central cylinders
+	for (var i = 0; i < height; i++){
+		var cylinder = create_cylinder(0xFFFF00, 1, 1, 2, 32);
+		cylinder.position.y = position_y;
+		position_y += POSITION_ADD;
+
+		shapes.push(cylinder);
+	}
 }
 
-function setup_slider(slider_id, default_val, min_val, max_val, step, updated_div_id, line_property_to_update){
+function setup_slider(slider_id, default_val, min_val, max_val, step, /*updated_div_id,*/ line_property_to_update){
 
   	$( function() {
     	$( slider_id ).slider({
@@ -307,7 +373,7 @@ function setup_slider(slider_id, default_val, min_val, max_val, step, updated_di
       		max: max_val,
       		step: step,
       		slide: function( event, ui ) {
-        		$( updated_div_id ).val( ui.value );
+        		// $( updated_div_id ).val( ui.value );
 
         		if (line_property_to_update == "length"){
         			lines[ lines.length - 1 ].scale.y = ui.value;
@@ -332,18 +398,18 @@ function setup_slider(slider_id, default_val, min_val, max_val, step, updated_di
         		}
       		}
     	});
-    	$( updated_div_id ).val( $( slider_id ).slider( "value" ) );
+    	// $( updated_div_id ).val( $( slider_id ).slider( "value" ) );
   	});
 }
 
 function setup_UI(){
-	setup_slider( "#random", 1, 0.01, 2, 0.05, "#new_line_length", "length" );
-	setup_slider( "#random_X", 17, -20, 20, 0.1, "#new_line_X", "position_X" );
-	setup_slider( "#random_Y", 5, -20, 20, 0.1, "#new_line_Y", "position_Y" );
-	setup_slider( "#random_Z", 5, -20, 20, 0.1, "#new_line_Z", "position_Z" );
-	setup_slider( "#random_rotate_X", 0, -1.56, 1.56, 0.02, "#rotate_X", "rotate_X" );
-	setup_slider( "#random_rotate_Y", 0, -1.56, 1.56, 0.02, "#rotate_Y", "rotate_Y" );
-	setup_slider( "#random_rotate_Z", 0, -1.56, 1.56, 0.02, "#rotate_Z", "rotate_Z" );
+	setup_slider( "#line_length", 1, 0.01, 2, 0.05, /*"#new_line_length",*/ "length" );
+	setup_slider( "#line_X", 37, -40, 40, 0.1, /*"#new_line_X",*/ "position_X" );
+	setup_slider( "#line_Y", 5, -40, 40, 0.1, /*"#new_line_Y",*/ "position_Y" );
+	setup_slider( "#line_Z", 5, -40, 40, 0.1, /*"#new_line_Z",*/ "position_Z" );
+	setup_slider( "#line_rotate_X", 0, -1.56, 1.56, 0.02, /*"#rotate_X",*/ "rotate_X" );
+	setup_slider( "#line_rotate_Y", 0, -1.56, 1.56, 0.02, /*"#rotate_Y",*/ "rotate_Y" );
+	setup_slider( "#line_rotate_Z", 0, -1.56, 1.56, 0.02, /*"#rotate_Z",*/ "rotate_Z" );
 }
 
 function load_JS(){
@@ -356,7 +422,7 @@ function load_JS(){
 	renderer = new THREE.WebGLRenderer({ antialias: true, autoSize: true });
     renderer.setSize(window.innerWidth / 1.35, window.innerHeight / 1.35);
 
-	draw_environment(1);
+	draw_environment(9);
 
 	camera.position.x = CAMERA_X_DEFAULT;
 	camera.position.y = CAMERA_Y_DEFAULT;
