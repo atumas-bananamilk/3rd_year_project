@@ -55,6 +55,8 @@ unsigned long next_slot = 0;
 int *pixel_data;
 int no_of_pixels;
 
+struct pixel *pixels;
+
 void setup() {
   Serial.begin(9600);
   
@@ -94,12 +96,10 @@ void loop() {
     slot++;
   }
 
-  if (slot >= 0 && slot < NUM_SLOTS){
-
-    // turn all off
-    for (int i = 0; i < NUM_PIXELS; i++){
-      strip.setPixelColor(i, 0, 0, 0);
-    }
+  // turn all off
+  for (int i = 0; i < NUM_PIXELS; i++){
+    strip.setPixelColor(i, 0, 0, 0);
+  }
 
     // turn some on
 //    for (int i = 0; i < no_of_pixels; i++){
@@ -108,7 +108,6 @@ void loop() {
 //                             pixels[i].r, pixels[i].g, pixels[i].b );
 //      }
 //    }
-
     
       // if slot == 0:
           // if layer == 0:
@@ -129,63 +128,66 @@ void loop() {
             // if has something on with slot 7 <- turn on
           // ...
 
+  for (int i = 0; i < NUM_SLOTS; i++){
+    if (slot == i){
+      check(i);
+    }
+  }
 
-      switch(slot){
-        case 0:{ check(0); break; }
-        case 1:{ check(1); break; }
-        case 2:{ check(2); break; }
-        case 3:{ check(3); break; }
-        case 4:{ check(4); break; }
-        case 5:{ check(5); break; }
-        case 6:{ check(6); break; }
-        case 7:{ check(7); break; }
-        case 8:{ check(8); break; }
-        case 9:{ check(9); break; }
-        case 10:{ check(10); break; }
-        case 11:{ check(11); break; }
-        case 12:{ check(12); break; }
-        case 13:{ check(13); break; }
-        case 14:{ check(14); break; }
-        case 15:{ check(15); break; }
-        case 16:{ check(16); break; }
-        case 17:{ check(17); break; }
-        case 18:{ check(18); break; }
-        case 19:{ check(19); break; }
-        case 20:{ check(20); break; }
-        case 21:{ check(21); break; }
-        case 22:{ check(22); break; }
-        case 23:{ check(23); break; }
-        case 24:{ check(24); break; }
-        case 25:{ check(25); break; }
-        case 26:{ check(26); break; }
-        case 27:{ check(27); break; }
-        case 28:{ check(28); break; }
-        case 29:{ check(29); break; }
-        case 30:{ check(30); break; }
-        case 31:{ check(31); break; }
-        case 32:{ check(32); break; }
-        case 33:{ check(33); break; }
-        case 34:{ check(34); break; }
-        case 35:{ check(35); break; }
-        case 36:{ check(36); break; }
-        case 37:{ check(37); break; }
-        case 38:{ check(38); break; }
-        case 39:{ check(39); break; }
-        case 40:{ check(40); break; }
-        case 41:{ check(41); break; }
-        case 42:{ check(42); break; }
-        case 43:{ check(43); break; }
-        case 44:{ check(44); break; }
-      }
+//      switch(slot){
+//        case 0:{ check(0); break; }
+//        case 1:{ check(1); break; }
+//        case 2:{ check(2); break; }
+//        case 3:{ check(3); break; }
+//        case 4:{ check(4); break; }
+//        case 5:{ check(5); break; }
+//        case 6:{ check(6); break; }
+//        case 7:{ check(7); break; }
+//        case 8:{ check(8); break; }
+//        case 9:{ check(9); break; }
+//        case 10:{ check(10); break; }
+//        case 11:{ check(11); break; }
+//        case 12:{ check(12); break; }
+//        case 13:{ check(13); break; }
+//        case 14:{ check(14); break; }
+//        case 15:{ check(15); break; }
+//        case 16:{ check(16); break; }
+//        case 17:{ check(17); break; }
+//        case 18:{ check(18); break; }
+//        case 19:{ check(19); break; }
+//        case 20:{ check(20); break; }
+//        case 21:{ check(21); break; }
+//        case 22:{ check(22); break; }
+//        case 23:{ check(23); break; }
+//        case 24:{ check(24); break; }
+//        case 25:{ check(25); break; }
+//        case 26:{ check(26); break; }
+//        case 27:{ check(27); break; }
+//        case 28:{ check(28); break; }
+//        case 29:{ check(29); break; }
+//        case 30:{ check(30); break; }
+//        case 31:{ check(31); break; }
+//        case 32:{ check(32); break; }
+//        case 33:{ check(33); break; }
+//        case 34:{ check(34); break; }
+//        case 35:{ check(35); break; }
+//        case 36:{ check(36); break; }
+//        case 37:{ check(37); break; }
+//        case 38:{ check(38); break; }
+//        case 39:{ check(39); break; }
+//        case 40:{ check(40); break; }
+//        case 41:{ check(41); break; }
+//        case 42:{ check(42); break; }
+//        case 43:{ check(43); break; }
+//        case 44:{ check(44); break; }
 
     strip.show();
-  }
-  else{
+    
+  if (slot == 0){
     if (time >= end_off_time){
       cycle_finished = true;
     }
   }
-
 
 //  if (slot == 0 || slot == 43){
 ////      strip.setPixelColor(15, 255, 0, 0);
@@ -212,31 +214,31 @@ void loop() {
 void check(int incr){
   for (int i = 0; i < no_of_pixels; i++){
     if ( pixels[i].layer == 0 && pixels[i].slot == (0 + incr)%NUM_SLOTS ){
-      strip.setPixelColor( get_pixel_id( pixels[i].layer, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
+      strip.setPixelColor( get_pixel_id( 0, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
     }
     else if ( pixels[i].layer == 1 && pixels[i].slot == (5 + incr)%NUM_SLOTS ){
-      strip.setPixelColor( get_pixel_id( pixels[i].layer, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
+      strip.setPixelColor( get_pixel_id( 1, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
     }
     else if ( pixels[i].layer == 2 && pixels[i].slot == (10 + incr)%NUM_SLOTS ){
-      strip.setPixelColor( get_pixel_id( pixels[i].layer, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
+      strip.setPixelColor( get_pixel_id( 2, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
     }
     else if ( pixels[i].layer == 3 && pixels[i].slot == (15 + incr)%NUM_SLOTS ){
-      strip.setPixelColor( get_pixel_id( pixels[i].layer, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
+      strip.setPixelColor( get_pixel_id( 3, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
     }
     else if ( pixels[i].layer == 4 && pixels[i].slot == (20 + incr)%NUM_SLOTS ){
-      strip.setPixelColor( get_pixel_id( pixels[i].layer, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
+      strip.setPixelColor( get_pixel_id( 4, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
     }
     else if ( pixels[i].layer == 5 && pixels[i].slot == (25 + incr)%NUM_SLOTS ){
-      strip.setPixelColor( get_pixel_id( pixels[i].layer, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
+      strip.setPixelColor( get_pixel_id( 5, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
     }
     else if ( pixels[i].layer == 6 && pixels[i].slot == (30 + incr)%NUM_SLOTS ){
-      strip.setPixelColor( get_pixel_id( pixels[i].layer, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
+      strip.setPixelColor( get_pixel_id( 6, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
     }
     else if ( pixels[i].layer == 7 && pixels[i].slot == (35 + incr)%NUM_SLOTS ){
-      strip.setPixelColor( get_pixel_id( pixels[i].layer, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
+      strip.setPixelColor( get_pixel_id( 7, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
     }
     else if ( pixels[i].layer == 8 && pixels[i].slot == (40 + incr)%NUM_SLOTS ){
-      strip.setPixelColor( get_pixel_id( pixels[i].layer, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
+      strip.setPixelColor( get_pixel_id( 8, pixels[i].led ), pixels[i].r, pixels[i].g, pixels[i].b );
     }
   }
 }
@@ -270,9 +272,11 @@ void read_pixels(){
    number = strtok(command_char_array, delimiter);
    no_of_pixels = atoi(number);
 
-   struct pixel pixels[no_of_pixels];
+//   struct pixel pixels[no_of_pixels];
+   pixels = malloc(no_of_pixels * (sizeof(struct pixel)));
 
-   int curr_pixel_number = curr_pixel = 0;
+   int curr_pixel_number = 0;
+   int curr_pixel = 0;
    
    number = strtok(NULL, delimiter);
    while (number != NULL)
