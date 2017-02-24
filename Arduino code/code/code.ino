@@ -18,7 +18,8 @@ Servo ESC1;
 int pos = 0;
 int speed;
 
-char command;
+//char command;
+String command;
 
 unsigned long rev_time = 0;
 unsigned long time_started = 0;
@@ -46,8 +47,11 @@ unsigned long slot_time = 0;
 int slot = 0;
 unsigned long next_slot = 0;
 
-// {layer, LED, time_slot, R, G, B}
-int coordinates[6] = {0, 15, 0, 255, 0, 0};
+// PROTOCOL
+// no_of_coordinates, layer, LED, slot, R, G, B, 
+//                    layer, LED, slot, R, G, B
+
+//int coordinates[6] = {0, 15, 5, 255, 0, 0};
 
 void setup() {
   Serial.begin(9600);
@@ -78,17 +82,22 @@ void loop() {
     slot++;
   }
 
-  if (slot == 4 || slot == 20 || slot == 40){
+//  Serial.print("SLOT: ");
+//  Serial.println(slot);
 
-      strip.setPixelColor(15, 255, 0, 0);
-      strip.setPixelColor(31, 0, 255, 0);
-      strip.show();
+  if (slot == 0 || slot == 43){
+//      strip.setPixelColor(15, 255, 0, 0);
+//      strip.show();
+
+    digitalWrite(10, HIGH);
   }
   else{
-      for (int i = 0; i < NUM_PIXELS; i++){
-          strip.setPixelColor(i, 0, 0, 0);
-      }
-      strip.show();
+//      for (int i = 0; i < NUM_PIXELS; i++){
+//          strip.setPixelColor(i, 0, 0, 0);
+//      }
+//      strip.show();
+
+    digitalWrite(10, LOW);
     
     if (time >= end_off_time){
       cycle_finished = true;
@@ -99,8 +108,13 @@ void loop() {
 //    turned_off_already = false;
 //
 //    if (!turned_on_already){
-//      strip.setPixelColor(15, 255, 0, 0);
-//      strip.show();
+////      for (int i = 0; i < 16; i++){
+////        strip.setPixelColor(i, 255, 0, 0);
+////      }
+////      strip.show();
+//
+//    digitalWrite(10, HIGH);
+//
 //      turned_on_already = true;
 //    }
 //  }
@@ -108,10 +122,13 @@ void loop() {
 //    turned_on_already = false;
 //    
 //    if (!turned_off_already){
-//      for (int i = 0; i < NUM_PIXELS; i++){
-//          strip.setPixelColor(i, 0, 0, 0);
-//      }
-//      strip.show();
+////      for (int i = 0; i < NUM_PIXELS; i++){
+////          strip.setPixelColor(i, 0, 0, 0);
+////      }
+////      strip.show();
+//
+//    digitalWrite(10, LOW);
+//
 //      turned_off_already = true;
 //    }
 //    
@@ -120,64 +137,55 @@ void loop() {
 //    }
 //  }
 
-  read_serial_commands();
-  read_motor_control_commands();
+  read_serial();
 }
 
-void read_serial_commands(){
+void read_serial(){
   if (Serial.available() > 0) {
-    command = Serial.read();
-    Serial.print("CHARACTER READ: ");
+    command = Serial.readString();
+    Serial.print("COMMAND: ");
     Serial.println(command);
+  
+    if (command.length() > 1){
+      read_coordinates();
+    }
+    else{
+      read_motor_control_commands();
+    }
   }
 }
 
+void read_coordinates(){
+  String rr[] = strtok(command, ",");
+//  int coordinates[] = atoi(strtok(command, ","));
+
+  int sizee = (sizeof(coordinates)/sizeof(int));
+  
+    Serial.print("SIZE: ");
+    Serial.println(sizee);
+}
+
 void read_motor_control_commands(){
-  if (command == 'a'){
+  if ( command.equals("a") ){
     Serial.println("SPEEDING UP STARTED");
     for(speed = 0; speed <= MAX_SPEED; speed += 10) {
       setSpeed(speed);
       delay(1000);
     }
-    command = 'q';
+    command = "q";
     Serial.println("SPEEDING UP FINISHED");
   }
-  else if (command == 's'){
+  else if ( command.equals("s") ){
     Serial.println("STOP STARTED");
     for(speed = MAX_SPEED; speed > 0; speed -= 10) {
       setSpeed(speed);
       delay(1000);
     }
     setSpeed(0);
-    command = 'q';
+    command = "q";
     Serial.println("STOP FINISHED");
   }
 }
-
-/*
-void update_LEDs(int R_given, int G_given, int B_given, boolean update_all){
-  update_check++;
-  
-  if (update_all){
-    for (int i = 0; i < NUM_PIXELS; i++){
-      strip.setPixelColor(i, R_given, G_given, B_given);
-    }
-  }
-  else{
-    strip.setPixelColor(15, R_given, G_given, B_given);
-  }
-  strip.show();
-}
-
-void check_RPM(){
-  if (half_revolutions >= 20) { 
-    rpm = 30*1000/(millis() - timeold)*half_revolutions;
-    timeold = millis();
-    half_revolutions = 0;
-    //Serial.println(rpm);//,DEC);
-  }
-}
-*/
 
 void setup_sensor(){
   //Initialize the intterrupt pin (Arduino digital pin 2)
@@ -208,11 +216,13 @@ void magnet_detect(){
       time_started = current_time;
     }
     
-//      Serial.print("REV TIME: ");
-//      Serial.println(rev_time);
+      Serial.print("REV TIME: ");
+      Serial.println(rev_time);
 
     // remove random noise
-    if (rev_time > 50000 && rev_time < 61000){
+    // 50000, 61000 - neopixel
+    // 60000, 68000 - normal LED
+    if (rev_time > 60000 && rev_time < 68000){
       total_time += rev_time;
       iterations++;
     }
