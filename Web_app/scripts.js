@@ -24,7 +24,7 @@ var line;
 
 var lines = [];
 
-var NO_OF_LAYERS = 3;
+var NO_OF_LAYERS = 4;
 var NO_OF_TIME_SLOTS = 45;
 var NO_OF_PIXELS_IN_LAYER = 15 * NO_OF_TIME_SLOTS + 1;
 
@@ -156,10 +156,7 @@ function create_pixel(coordinate){
 		led = (layer * 16) + ( 15 - ((coordinate - layer) % 15) );
 	}
 
-	var slot = (coordinate % NO_OF_PIXELS_IN_LAYER ) % NO_OF_TIME_SLOTS;
-
-
-
+	var slot = parseInt(coordinate / 15) - (layer * NO_OF_TIME_SLOTS);
 
 	var r = 255;
 	var g = 0;
@@ -187,41 +184,39 @@ function generate_coordinates(){
 
 	// 45 * Math.PI / 180      // Rotates  45 degrees per frame
 
-	var ss = "";
+	var msg = coordinates.length+",";
 	var pixel;
 
 	for (var i = 0; i < coordinates.length; i++){
 		pixel = create_pixel( coordinates[i] );
-
-		// ss += coordinates[i] + ", ";
-
-		// ss += "ID: " + coordinates[i];
-		ss += " LAYER: " + pixel.layer;
-		ss += " LED: " + pixel.led;
-		ss += " SLOT: " + pixel.slot + "\n";
-		// ss += " R: " + pixel.r;
-		// ss += " G: " + pixel.g;
-		// ss += " B: " + pixel.b;
+		msg += pixel.layer+",";
+		msg += pixel.led+",";
+		msg += pixel.slot+",";
+		msg += pixel.r+",";
+		msg += pixel.g+",";
+		msg += pixel.b+",";
 	}
-	alert(ss);
+	msg.substring(0, msg.length - 2);
+	alert(msg);
+	send_data_to_arduino(msg);
 }
 
-function send_coordinates(){
-	var ss = "";
-	for (var i = 0; i < coordinates.length; i++){
-		ss += coordinates[i];
-		ss += ", ";
-	}
-	send_data_to_arduino(ss);
-}
+// function send_coordinates(msg){
+// 	// var ss = "";
+// 	// for (var i = 0; i < coordinates.length; i++){
+// 	// 	ss += coordinates[i];
+// 	// 	ss += ", ";
+// 	// }
+// 	send_data_to_arduino(msg);
+// }
 
-function send_data_to_arduino(coordinates_given){
-	coordinates_given = "nice";
+function send_data_to_arduino(msg){
+	// coordinates_given = "nice";
 
 	$.ajax({
 		url: './server.php',
 		type: 'POST',
-		data: {coordinates_given: coordinates_given},
+		data: {msg: msg},
 		success: function( response ){
 			alert("SUCCESS: "+response);
 		},
