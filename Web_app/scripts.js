@@ -196,7 +196,7 @@ function generate_coordinates(){
 		msg += pixel.g+",";
 		msg += pixel.b+",";
 	}
-	msg.substring(0, msg.length - 2);
+	msg = msg.slice(0, -1);
 	alert(msg);
 	send_data_to_arduino(msg);
 }
@@ -218,7 +218,7 @@ function send_data_to_arduino(msg){
 		type: 'POST',
 		data: {msg: msg},
 		success: function( response ){
-			alert("SUCCESS: "+response);
+			alert("SUCCESS");
 		},
 		error: function( response ){
 	   		alert("ERROR: "+response);

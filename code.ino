@@ -59,6 +59,8 @@ struct pixel *pixels;
 
 void setup() {
   Serial.begin(9600);
+
+  pinMode(12, OUTPUT);
   
   setup_sensor();
   setup_LEDs();
@@ -208,7 +210,33 @@ void loop() {
 //    }
 //  }
 
+// 8,0,15,0,255,0,0,0,14,0,255,0,0,0,15,1,255,0,0,0,14,1,255,0,0,0,15,2,255,0,0,0,15,43,255,0,0,0,15,44,255,0,0,0,14,44,255,0,0
+
+  if ( compare_values(0, 8,0,15,0,255,0,0) && 
+       compare_values(1, 8,0,14,0,255,0,0) && 
+       compare_values(2, 8,0,15,1,255,0,0) && 
+       compare_values(3, 8,0,14,1,255,0,0) && 
+       compare_values(4, 8,0,15,2,255,0,0) && 
+       compare_values(5, 8,0,15,43,255,0,0) && 
+       compare_values(6, 8,0,15,44,255,0,0) && 
+       compare_values(7, 8,0,14,44,255,0,0) ){
+    digitalWrite(12, HIGH);
+  }
+
   read_serial();
+}
+
+boolean compare_values(int element_id, int number, int layer_given, int led_given, int slot_given, int r_given, int g_given, int b_given){
+    if ( no_of_pixels == number && 
+       pixels[element_id].layer == layer_given && 
+       pixels[element_id].led == led_given && 
+       pixels[element_id].slot == slot_given &&
+       pixels[element_id].r == r_given &&
+       pixels[element_id].g == g_given &&
+       pixels[element_id].b == b_given ){
+        return true;
+    }
+    return false;
 }
 
 void check(int incr){

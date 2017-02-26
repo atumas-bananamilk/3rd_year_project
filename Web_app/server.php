@@ -5,20 +5,28 @@ $comPort = "/dev/cu.usbmodem1411"; //The com port address. This is a debian addr
 
 $msg = $_POST['msg'];
 
-$serial = new PhpSerial;
-$serial->deviceSet($comPort);
-$serial->confBaudRate(9600);
-$serial->confParity("none");
-$serial->confCharacterLength(8);
-$serial->confStopBits(1);
-$serial->deviceOpen();
+if (isset($msg)){
+	write_to_file($msg);
+	send_serial_to_arduino($msg, $comPort);
+}
 
-sleep(2);
+function send_serial_to_arduino($msg, $comPort){
+	$serial = new PhpSerial;
+	$serial->deviceSet($comPort);
+	$serial->confBaudRate(9600);
+	$serial->confParity("none");
+	$serial->confCharacterLength(8);
+	$serial->confStopBits(1);
+	$serial->deviceOpen();
 
-$serial->sendMessage($msg);
-$serial->deviceClose();
+	sleep(10);//2
 
-$myfile = fopen("./random.txt", "w") or die("Unable to open file!");
-$txt = $msg;
-fwrite($myfile, $txt);
-fclose($myfile);
+	$serial->sendMessage($msg);
+	$serial->deviceClose();
+}
+
+function write_to_file($msg){
+	$myfile = fopen("./random.txt", "w") or die("Unable to open file!");
+	fwrite($myfile, $msg);
+	fclose($myfile);
+}
