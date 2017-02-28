@@ -175,13 +175,6 @@ function create_pixel(coordinate){
 }
 
 function generate_coordinates(){
-	// var ss = "";
-	// for (var i = 0; i < coordinates.length; i++){
-	// ss += coordinates[i];
-	// ss += ", ";
-	// }
-	// alert(ss);
-
 	// 45 * Math.PI / 180      // Rotates  45 degrees per frame
 
 	var msg = coordinates.length+",";
@@ -201,22 +194,39 @@ function generate_coordinates(){
 	send_data_to_arduino(msg);
 }
 
-// function send_coordinates(msg){
-// 	// var ss = "";
-// 	// for (var i = 0; i < coordinates.length; i++){
-// 	// 	ss += coordinates[i];
-// 	// 	ss += ", ";
-// 	// }
-// 	send_data_to_arduino(msg);
-// }
-
 function send_data_to_arduino(msg){
-	// coordinates_given = "nice";
-
 	$.ajax({
 		url: './server.php',
 		type: 'POST',
 		data: {msg: msg},
+		success: function( response ){
+			alert("SUCCESS");
+		},
+		error: function( response ){
+	   		alert("ERROR: "+response);
+		}
+	});
+}
+
+function turn_on(){
+	$.ajax({
+		url: './server.php',
+		type: 'POST',
+		data: {on: "on"},
+		success: function( response ){
+			alert("SUCCESS");
+		},
+		error: function( response ){
+	   		alert("ERROR: "+response);
+		}
+	});
+}
+
+function turn_off(){
+	$.ajax({
+		url: './server.php',
+		type: 'POST',
+		data: {off: "off"},
 		success: function( response ){
 			alert("SUCCESS");
 		},
