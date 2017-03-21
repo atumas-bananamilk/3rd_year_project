@@ -20,13 +20,20 @@ var cylinder;
 var shapes = [];
 var coordinates = [];
 
-var line;
+// var line;
 
 var lines = [];
 
-var NO_OF_LAYERS = 4;
+var NO_OF_LAYERS = 3;
 var NO_OF_TIME_SLOTS = 45;
 var NO_OF_PIXELS_IN_LAYER = 15 * NO_OF_TIME_SLOTS + 1;
+
+
+
+
+
+var shape;
+var shape_values;
 
 function mesh_transparent(geometry, colour){
 	var material = new THREE.MeshBasicMaterial( { color: colour, wireframe: true, transparent: true, opacity: 0.1 } );
@@ -79,8 +86,8 @@ function create_outer_cylinder(colour, up_size, down_size, height, segments){
 	return cylinder;
 }
 
-function create_cylinder(transparent, colour, up_size, down_size, height, segments){
-	var geometry = new THREE.CylinderGeometry( up_size, down_size, height, segments, 1, false);
+function create_cylinder(transparent, colour, top_size, bottom_size, height, segments){
+	var geometry = new THREE.CylinderGeometry( top_size, bottom_size, height, segments, 1, false);
 	var cylinder = (transparent) ? mesh_transparent(geometry, colour) : mesh(geometry, colour, 0xFFFFFF);;
 
 	scene.add(cylinder);
@@ -93,14 +100,33 @@ function create_new_ring(){
 	scene.add(ring);
 }
 
-function create_new_line(){
-	line = create_cylinder(false, 0x0000ff, 0.2, 0.2, 16, 4);
-	line.position.x = 30;
-	line.position.y = 4;
-	line.position.z = 0;
+function create_new_line(x_given, y_given, z_given){
+	var line = create_cylinder(false, 0x0000ff, 0.2, 0.2, 16, 4);
+	line.position.x = x_given;
+	line.position.y = y_given;
+	line.position.z = z_given;
 	line.rotation.z = 0;//Math.PI / 180//3.12;
 
 	lines.push(line);
+}
+
+function test_1(){
+	create_new_line(30,4,0);
+	create_new_line(-30,4,1);
+	create_new_line(0,4,30);
+	create_new_line(0,4,-30);
+}
+
+function test_2(){
+	create_new_line(30,7,0);
+	create_new_line(-30,7,1);
+	create_new_line(0,7,30);
+	create_new_line(0,7,-30);
+
+	// create_new_line(21.2,7,21.8);
+	// create_new_line(-21.2,7,-21.8);
+	// create_new_line(-21.2,7,21.8);
+	// create_new_line(21.2,7,-21.8);
 }
 
 function is_colliding(object_1, object_2){
@@ -131,8 +157,10 @@ function add_coordinate(coordinate){
 }
 
 function show_result(){
-	var current_line = lines[ lines.length - 1 ];
-	check_shape_collisions(current_line);
+	for (var i = 0; i < shapes.length; i++){
+		var current_line = lines[ i ];
+		check_shape_collisions(current_line);
+	}
 }
 
 function clear_result(){
@@ -199,34 +227,6 @@ function send_data_to_arduino(msg){
 		url: './server.php',
 		type: 'POST',
 		data: {msg: msg},
-		success: function( response ){
-			alert("SUCCESS");
-		},
-		error: function( response ){
-	   		alert("ERROR: "+response);
-		}
-	});
-}
-
-function turn_on(){
-	$.ajax({
-		url: './server.php',
-		type: 'POST',
-		data: {on: "on"},
-		success: function( response ){
-			alert("SUCCESS");
-		},
-		error: function( response ){
-	   		alert("ERROR: "+response);
-		}
-	});
-}
-
-function turn_off(){
-	$.ajax({
-		url: './server.php',
-		type: 'POST',
-		data: {off: "off"},
 		success: function( response ){
 			alert("SUCCESS");
 		},
@@ -335,47 +335,57 @@ function draw_shapes(no_of_shapes, position_y, rotation_y){
 	scene.add( group );
 }
 
-function draw_environment(){
-	// draw outer cylinder
-	var outer_cylinder = create_outer_cylinder(0xAA0000, 31, 31, NO_OF_LAYERS * 2, 45);
-	outer_cylinder.position.y = -NO_OF_LAYERS;
-
-	// 90 degrees - 1.5686
-	var ROTATION_ANGLE = 0.13965;//0.1426
-	var rotation_y;
-	var POSITION_ADD = -2;
-	var position_y = -2;
-
-	var cylinder_position_y = -1;
-
-	for (var k = 0; k < NO_OF_LAYERS; k++){
-		rotation_y = 0;
-		for (var i = 0; i < NO_OF_TIME_SLOTS; i++){
-			draw_shapes( 15, position_y, rotation_y );
-			rotation_y += ROTATION_ANGLE;
-		}
-
-		position_y += POSITION_ADD;
-
-		// draw 1 central cylinder
-		var cylinder = create_cylinder(true, 0xFFFF00, 1, 1, 2, 32);
-		cylinder.position.y = cylinder_position_y;
-		cylinder_position_y += POSITION_ADD;
-		shapes.push(cylinder);
-	}
-
-	// position_y = -1;
-
-	// // draw central cylinders
-	// for (var i = 0; i < NO_OF_LAYERS; i++){
-	// var cylinder = create_cylinder(true, 0xFFFF00, 1, 1, 2, 32);
-	// cylinder.position.y = position_y;
-	// position_y += POSITION_ADD;
-	// shapes.push(cylinder);
-	// }
+function create_new_sketch(){
+	window.location.href = './app.php?new=true&name=undefined';
 }
 
-function setup_slider(slider_id, default_val, min_val, max_val, step, /*updated_div_id,*/ line_property_to_update){
+function draw_environment(){
+	// alert("R: "+shape_values.R+
+	// 	", G: "+shape_values.G+
+	// 	", B: "+shape_values.B+
+	// 	", TOP: "+shape_values.width_top+
+	// 	", MIDDLE: "+shape_values.width_middle+
+	// 	", BOTTOM: "+shape_values.width_bottom+
+	// 	", MOV DIRECTION: "+shape_values.mov_direction+
+	// 	", MOV SPEED: "+shape_values.mov_speed
+	// 	);
+	var rgb = rgbToHex(shape_values.R, shape_values.G, shape_values.B);
+
+	// 2 * 9: 9 layers
+	// 1: 1 led
+	shape = create_cylinder(false, rgb, shape_values.width_top, shape_values.width_middle, 2 * 9, 30);
+	shape.position.y = 0;
+}
+
+function setup_shape_values(name, width_top, width_middle, width_bottom, colour_R, colour_G, colour_B, mov_direction, mov_speed){
+	shape_values = {
+		name: name,
+		width_top: width_top,
+		width_middle: width_middle,
+		width_bottom: width_bottom,
+		R: colour_R,
+		G: colour_G,
+		B: colour_B,
+		mov_direction: mov_direction,
+		mov_speed: mov_speed
+	};
+}
+
+function update_shape(){
+    scene.remove(shape);
+	shape = create_cylinder(false, rgbToHex(shape_values.R, shape_values.G, shape_values.B), shape_values.width_top, shape_values.width_middle, 2 * 9, 30);
+}
+
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return c.toString(16).length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return parseInt( componentToHex(r) + componentToHex(g) + componentToHex(b), 16 );
+}
+
+function setup_slider(slider_id, default_val, min_val, max_val, step, /*updated_div_id,*/ property_to_update){
 	$( function() {
     	$( slider_id ).slider({
 	    	value: default_val,
@@ -385,25 +395,27 @@ function setup_slider(slider_id, default_val, min_val, max_val, step, /*updated_
 	    	slide: function( event, ui ) {
 	        // $( updated_div_id ).val( ui.value );
 
-		        if (line_property_to_update == "length"){
-		        	lines[ lines.length - 1 ].scale.y = ui.value;
+		        if (property_to_update == "top_width"){
+		        	shape_values.width_top = ui.value;
+		        	document.getElementById("top_width_input").value = ui.value;
+		        	update_shape();
 		        }
-		        else if (line_property_to_update == "position_X"){
+		        else if (property_to_update == "position_X"){
 		        	lines[ lines.length - 1 ].position.x = ui.value;
 		        }
-		        else if (line_property_to_update == "position_Y"){
+		        else if (property_to_update == "position_Y"){
 		        	lines[ lines.length - 1 ].position.y = ui.value;
 		        }
-		        else if (line_property_to_update == "position_Z"){
+		        else if (property_to_update == "position_Z"){
 		        	lines[ lines.length - 1 ].position.z = ui.value;
 		        }
-		        else if (line_property_to_update == "rotate_X"){
+		        else if (property_to_update == "rotate_X"){
 		        	lines[ lines.length - 1 ].rotation.x = ui.value;
 		        }
-		        else if (line_property_to_update == "rotate_Y"){
+		        else if (property_to_update == "rotate_Y"){
 		        	lines[ lines.length - 1 ].rotation.y = ui.value;
 		        }
-		        else if (line_property_to_update == "rotate_Z"){
+		        else if (property_to_update == "rotate_Z"){
 		        	lines[ lines.length - 1 ].rotation.z = ui.value;
 		        }
 	    	}
@@ -413,7 +425,7 @@ function setup_slider(slider_id, default_val, min_val, max_val, step, /*updated_
 }
 
 function setup_UI(){
-	setup_slider( "#line_length", 1, 0.01, 2, 0.05, /*"#new_line_length",*/ "length" );
+	setup_slider( "#top_width", 10, 1, 16, 1, /*"#new_line_length",*/ "top_width" );
 	setup_slider( "#line_X", 20, -40, 40, 0.1, /*"#new_line_X",*/ "position_X" );
 	setup_slider( "#line_Y", 5, -40, 40, 0.1, /*"#new_line_Y",*/ "position_Y" );
 	setup_slider( "#line_Z", 5, -40, 40, 0.1, /*"#new_line_Z",*/ "position_Z" );
@@ -422,16 +434,17 @@ function setup_UI(){
 	setup_slider( "#line_rotate_Z", 0, -1.56, 1.56, 0.02, /*"#rotate_Z",*/ "rotate_Z" );
 }
 
-function load_JS(){
+function load_JS(name, width_top, width_middle, width_bottom, colour_R, colour_G, colour_B, mov_direction, mov_speed){
 	setup_UI();
 
 	scene = new THREE.Scene();
-	scene.background = new THREE.Color( 0x444444 );
+	scene.background = new THREE.Color( 0xAAAAAA );
 	camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
 	renderer = new THREE.WebGLRenderer({ antialias: true, autoSize: true });
-    renderer.setSize(window.innerWidth / 1.35, window.innerHeight / 1.35);
+    renderer.setSize(window.innerWidth / 1.40, window.innerHeight / 1.40);
 
+    setup_shape_values(name, width_top, width_middle, width_bottom, colour_R, colour_G, colour_B, mov_direction, mov_speed);
 	draw_environment();
 
 	camera.position.x = CAMERA_X_DEFAULT;
@@ -448,6 +461,8 @@ function load_JS(){
 	scene.add( new THREE.AxisHelper(30) );
 
     //move_with_mouse(renderer);
+
+	clear_result();
 
 	function render(){
 		camera.position.x += CAMERA_X;
