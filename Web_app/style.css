@@ -78,6 +78,70 @@ body{
 	width: 5vw;
 	cursor: pointer;
 }
+#save_button, #save_button_new_project{
+    position: absolute;
+	width: 9vw;
+	margin: 29vw 0vw 0vw 0vw;
+	cursor: pointer;
+}
+#layer_select{
+    position: absolute;
+	margin-top: 29.8vw;
+	margin-left: 24.5vw;
+}
+#layer_1{
+    position: absolute;
+	width: 2.8vw;
+	cursor: pointer;
+}
+#layer_2{
+    position: absolute;
+	width: 2.8vw;
+	margin-left: 3vw;
+	cursor: pointer;
+}
+#layer_3{
+    position: absolute;
+	width: 2.8vw;
+	margin-left: 6vw;
+	cursor: pointer;
+}
+#layer_4{
+    position: absolute;
+	width: 2.8vw;
+	margin-left: 9vw;
+	cursor: pointer;
+}
+#layer_5{
+    position: absolute;
+	width: 2.8vw;
+	margin-left: 12vw;
+	cursor: pointer;
+}
+#layer_6{
+    position: absolute;
+	width: 2.8vw;
+	margin-left: 15vw;
+	cursor: pointer;
+}
+#layer_7{
+    position: absolute;
+	width: 2.8vw;
+	margin-left: 18vw;
+	cursor: pointer;
+}
+#layer_8{
+    position: absolute;
+	width: 2.8vw;
+	margin-left: 21vw;
+	cursor: pointer;
+}
+#layer_9{
+    position: absolute;
+	width: 2.8vw;
+	margin-left: 24vw;
+	cursor: pointer;
+}
 #drawing_block{
 	width: 100vw;
 	margin: 0vw 0vw 4vw 0vw;
@@ -90,6 +154,7 @@ body{
 
 #canvas_block{
 	display: inline-block;
+	border: 3px solid #AAAAAA;
 }
 #canvas{
 	background-color: #FFFFFF;

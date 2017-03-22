@@ -43,7 +43,7 @@ echo "<html>";
 			$no_of_projects = sizeof($projects);
 
 			for ($i = 0; $i < $no_of_projects; $i++){
-				// echo "<div class='project_block' onclick='open_sketch(\"".$projects[$i]['name']."\",
+				// echo "<div class='project_block' onclick='open_ss(\"".$projects[$i]['name']."\",
 				// 													  \"".$projects[$i]['width_top']."\",
 				// 													  \"".$projects[$i]['width_middle']."\",
 				// 													  \"".$projects[$i]['width_bottom']."\",
@@ -53,7 +53,7 @@ echo "<html>";
 				// 													  \"".$projects[$i]['mov_direction']."\",
 				// 													  \"".$projects[$i]['mov_speed']."\")'>";
 
-				echo "<div class='project_block' onclick='open_ss(\"".$projects[$i]['name']."\")'>";
+				echo "<div class='project_block' onclick='open_sketch(\"".$projects[$i]['name']."\")'>";
 					echo $projects[$i]['name'];
 				echo "</div>";
 

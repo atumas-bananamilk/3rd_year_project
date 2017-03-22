@@ -24,16 +24,17 @@ var coordinates = [];
 
 var lines = [];
 
-var NO_OF_LAYERS = 3;
+var NO_OF_LAYERS = 9;
 var NO_OF_TIME_SLOTS = 45;
 var NO_OF_PIXELS_IN_LAYER = 15 * NO_OF_TIME_SLOTS + 1;
 
 
 
-
-
-var shape;
+var shape_top;
 var shape_values;
+var LAYER_SELECTED = 1;
+
+var layers = [];
 
 function mesh_transparent(geometry, colour){
 	var material = new THREE.MeshBasicMaterial( { color: colour, wireframe: true, transparent: true, opacity: 0.1 } );
@@ -157,10 +158,7 @@ function add_coordinate(coordinate){
 }
 
 function show_result(){
-	for (var i = 0; i < shapes.length; i++){
-		var current_line = lines[ i ];
-		check_shape_collisions(current_line);
-	}
+
 }
 
 function clear_result(){
@@ -335,45 +333,136 @@ function draw_shapes(no_of_shapes, position_y, rotation_y){
 	scene.add( group );
 }
 
+function create_project(){
+	$.ajax({
+		url: './create_project.php',
+		type: 'POST',
+		data: {layers: layers},
+		success: function( response ){
+			if (response.length == 0){
+				alert("Project saved.");
+			}
+			else{
+				alert(response);
+			}
+		},
+		error: function( response ){
+	   		alert("ERROR: "+response);
+		}
+	});
+}
+
+function save_project(){
+	$.ajax({
+		url: './save_project.php',
+		type: 'POST',
+		data: {layers: layers},
+		success: function( response ){
+			if (response.length == 0){
+				alert("Project saved.");
+			}
+			else{
+				alert(response);
+			}
+		},
+		error: function( response ){
+	   		alert("ERROR: "+response);
+		}
+	});
+}
+
 function create_new_sketch(){
 	window.location.href = './app.php?new=true&name=undefined';
 }
 
+function reset_layer_selects(){
+	document.getElementById("layer_1").src = "./images/number_1.png";
+	document.getElementById("layer_2").src = "./images/number_2.png";
+	document.getElementById("layer_3").src = "./images/number_3.png";
+	document.getElementById("layer_4").src = "./images/number_4.png";
+	document.getElementById("layer_5").src = "./images/number_5.png";
+	document.getElementById("layer_6").src = "./images/number_6.png";
+	document.getElementById("layer_7").src = "./images/number_7.png";
+	document.getElementById("layer_8").src = "./images/number_8.png";
+	document.getElementById("layer_9").src = "./images/number_9.png";
+}
+
+function select_layer(id){
+	reset_layer_selects();
+
+	switch(id){
+		case 1:{ 
+			document.getElementById("layer_1").src = "./images/number_1_selected.png"; 
+			LAYER_SELECTED = 1;
+			break; 
+		}
+		case 2:{ 
+			document.getElementById("layer_2").src = "./images/number_2_selected.png"; 
+			LAYER_SELECTED = 2;
+			break; 
+		}
+		case 3:{ 
+			document.getElementById("layer_3").src = "./images/number_3_selected.png"; 
+			LAYER_SELECTED = 3;
+			break; 
+		}
+		case 4:{ 
+			document.getElementById("layer_4").src = "./images/number_4_selected.png"; 
+			LAYER_SELECTED = 4;
+			break; 
+		}
+		case 5:{ 
+			document.getElementById("layer_5").src = "./images/number_5_selected.png"; 
+			LAYER_SELECTED = 5;
+			break; 
+		}
+		case 6:{ 
+			document.getElementById("layer_6").src = "./images/number_6_selected.png"; 
+			LAYER_SELECTED = 6;
+			break; 
+		}
+		case 7:{ 
+			document.getElementById("layer_7").src = "./images/number_7_selected.png"; 
+			LAYER_SELECTED = 7;
+			break; 
+		}
+		case 8:{ 
+			document.getElementById("layer_8").src = "./images/number_8_selected.png"; 
+			LAYER_SELECTED = 8;
+			break; 
+		}
+		case 9:{ 
+			document.getElementById("layer_9").src = "./images/number_9_selected.png"; 
+			LAYER_SELECTED = 9;
+			break; 
+		}
+	}
+	setup_UI();
+}
+
 function draw_environment(){
-	// alert("R: "+shape_values.R+
-	// 	", G: "+shape_values.G+
-	// 	", B: "+shape_values.B+
-	// 	", TOP: "+shape_values.width_top+
-	// 	", MIDDLE: "+shape_values.width_middle+
-	// 	", BOTTOM: "+shape_values.width_bottom+
-	// 	", MOV DIRECTION: "+shape_values.mov_direction+
-	// 	", MOV SPEED: "+shape_values.mov_speed
-	// 	);
-	var rgb = rgbToHex(shape_values.R, shape_values.G, shape_values.B);
+	// NOTE: need to subtract 0 otherwise there is a bug coming from the library
+	// (bug only occurs with variables but not plain numbers)
+	var rgb;
+	var position_y = 9;
 
-	// 2 * 9: 9 layers
-	// 1: 1 led
-	shape = create_cylinder(false, rgb, shape_values.width_top, shape_values.width_middle, 2 * 9, 30);
-	shape.position.y = 0;
+	for (var i = 0; i < NO_OF_LAYERS; i++){
+		rgb = rgbToHex(layers[i]['colour_R'] - 0, layers[i]['colour_G'] - 0, layers[i]['colour_B'] - 0);
+		var shape = create_cylinder(false, rgb, layers[i]['width'] - 0, layers[i]['width'] - 0, 2, 30);
+		shape.position.y = position_y;
+		shapes.push(shape);
+		position_y -= 2;
+	}
 }
 
-function setup_shape_values(name, width_top, width_middle, width_bottom, colour_R, colour_G, colour_B, mov_direction, mov_speed){
-	shape_values = {
-		name: name,
-		width_top: width_top,
-		width_middle: width_middle,
-		width_bottom: width_bottom,
-		R: colour_R,
-		G: colour_G,
-		B: colour_B,
-		mov_direction: mov_direction,
-		mov_speed: mov_speed
-	};
-}
+function redraw_layer(){
+	// NOTE: need to subtract 0 otherwise there is a bug coming from the library
+	// (bug only occurs with variables but not plain numbers)
+	scene.remove( shapes[LAYER_SELECTED - 1] );
 
-function update_shape(){
-    scene.remove(shape);
-	shape = create_cylinder(false, rgbToHex(shape_values.R, shape_values.G, shape_values.B), shape_values.width_top, shape_values.width_middle, 2 * 9, 30);
+	var rgb = rgbToHex(layers[LAYER_SELECTED - 1]['colour_R'] - 0, layers[LAYER_SELECTED - 1]['colour_G'] - 0, layers[LAYER_SELECTED - 1]['colour_B'] - 0);
+	shapes[LAYER_SELECTED - 1] = create_cylinder(false, rgb, layers[LAYER_SELECTED - 1]['width'] - 0, layers[LAYER_SELECTED - 1]['width'] - 0, 2, 30);
+	shapes[LAYER_SELECTED - 1].position.y = 9 - 2 * (LAYER_SELECTED - 1);
 }
 
 function componentToHex(c) {
@@ -385,7 +474,7 @@ function rgbToHex(r, g, b) {
     return parseInt( componentToHex(r) + componentToHex(g) + componentToHex(b), 16 );
 }
 
-function setup_slider(slider_id, default_val, min_val, max_val, step, /*updated_div_id,*/ property_to_update){
+function setup_slider(slider_id, default_val, min_val, max_val, step){
 	$( function() {
     	$( slider_id ).slider({
 	    	value: default_val,
@@ -393,58 +482,64 @@ function setup_slider(slider_id, default_val, min_val, max_val, step, /*updated_
 	    	max: max_val,
 	    	step: step,
 	    	slide: function( event, ui ) {
-	        // $( updated_div_id ).val( ui.value );
-
-		        if (property_to_update == "top_width"){
-		        	shape_values.width_top = ui.value;
-		        	document.getElementById("top_width_input").value = ui.value;
-		        	update_shape();
+		        if (slider_id == "#width_slider"){
+					layers[LAYER_SELECTED - 1]['width'] = ui.value;
+		        	document.getElementById("width_input").value = ui.value;
 		        }
-		        else if (property_to_update == "position_X"){
-		        	lines[ lines.length - 1 ].position.x = ui.value;
+		        else if (slider_id == "#colour_R_slider"){
+					layers[LAYER_SELECTED - 1]['colour_R'] = ui.value;
+		        	document.getElementById("colour_R_input").value = ui.value;
 		        }
-		        else if (property_to_update == "position_Y"){
-		        	lines[ lines.length - 1 ].position.y = ui.value;
+		        else if (slider_id == "#colour_G_slider"){
+					layers[LAYER_SELECTED - 1]['colour_G'] = ui.value;
+		        	document.getElementById("colour_G_input").value = ui.value;
 		        }
-		        else if (property_to_update == "position_Z"){
-		        	lines[ lines.length - 1 ].position.z = ui.value;
+		        else if (slider_id == "#colour_B_slider"){
+					layers[LAYER_SELECTED - 1]['colour_B'] = ui.value;
+		        	document.getElementById("colour_B_input").value = ui.value;
 		        }
-		        else if (property_to_update == "rotate_X"){
-		        	lines[ lines.length - 1 ].rotation.x = ui.value;
-		        }
-		        else if (property_to_update == "rotate_Y"){
-		        	lines[ lines.length - 1 ].rotation.y = ui.value;
-		        }
-		        else if (property_to_update == "rotate_Z"){
-		        	lines[ lines.length - 1 ].rotation.z = ui.value;
-		        }
+				redraw_layer();
 	    	}
 	    });
-    // $( updated_div_id ).val( $( slider_id ).slider( "value" ) );
 	});
 }
 
 function setup_UI(){
-	setup_slider( "#top_width", 10, 1, 16, 1, /*"#new_line_length",*/ "top_width" );
-	setup_slider( "#line_X", 20, -40, 40, 0.1, /*"#new_line_X",*/ "position_X" );
-	setup_slider( "#line_Y", 5, -40, 40, 0.1, /*"#new_line_Y",*/ "position_Y" );
-	setup_slider( "#line_Z", 5, -40, 40, 0.1, /*"#new_line_Z",*/ "position_Z" );
-	setup_slider( "#line_rotate_X", 0, -1.56, 1.56, 0.02, /*"#rotate_X",*/ "rotate_X" );
-	setup_slider( "#line_rotate_Y", 0, -1.56, 1.56, 0.02, /*"#rotate_Y",*/ "rotate_Y" );
-	setup_slider( "#line_rotate_Z", 0, -1.56, 1.56, 0.02, /*"#rotate_Z",*/ "rotate_Z" );
+	document.getElementById("width_input").value = layers[LAYER_SELECTED - 1]['width'];
+	document.getElementById("colour_R_input").value = layers[LAYER_SELECTED - 1]['colour_R'];
+	document.getElementById("colour_G_input").value = layers[LAYER_SELECTED - 1]['colour_G'];
+	document.getElementById("colour_B_input").value = layers[LAYER_SELECTED - 1]['colour_B'];
+
+	setup_slider( "#width_slider", layers[LAYER_SELECTED - 1]['width'], 1, 16, 1 );
+	setup_slider( "#colour_R_slider", layers[LAYER_SELECTED - 1]['colour_R'], 0, 255, 1 );
+	setup_slider( "#colour_G_slider", layers[LAYER_SELECTED - 1]['colour_G'], 0, 255, 1 );
+	setup_slider( "#colour_B_slider", layers[LAYER_SELECTED - 1]['colour_B'], 0, 255, 1 );
 }
 
-function load_JS(name, width_top, width_middle, width_bottom, colour_R, colour_G, colour_B, mov_direction, mov_speed){
+function setup_layers(layer_1_given, layer_2_given, layer_3_given, layer_4_given, layer_5_given, layer_6_given, layer_7_given, layer_8_given, layer_9_given){
+	layers.push(layer_1_given);
+	layers.push(layer_2_given);
+	layers.push(layer_3_given);
+	layers.push(layer_4_given);
+	layers.push(layer_5_given);
+	layers.push(layer_6_given);
+	layers.push(layer_7_given);
+	layers.push(layer_8_given);
+	layers.push(layer_9_given);
+}
+
+function load_JS(layer_1_given, layer_2_given, layer_3_given, layer_4_given, layer_5_given, layer_6_given, layer_7_given, layer_8_given, layer_9_given){
+	setup_layers(layer_1_given, layer_2_given, layer_3_given, layer_4_given, layer_5_given, layer_6_given, layer_7_given, layer_8_given, layer_9_given);
 	setup_UI();
 
 	scene = new THREE.Scene();
-	scene.background = new THREE.Color( 0xAAAAAA );
+	scene.background = new THREE.Color( 0x000000 );
 	camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
 	renderer = new THREE.WebGLRenderer({ antialias: true, autoSize: true });
+	renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize(window.innerWidth / 1.40, window.innerHeight / 1.40);
 
-    setup_shape_values(name, width_top, width_middle, width_bottom, colour_R, colour_G, colour_B, mov_direction, mov_speed);
 	draw_environment();
 
 	camera.position.x = CAMERA_X_DEFAULT;

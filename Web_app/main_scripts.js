@@ -1,7 +1,7 @@
 function register(){
 	window.location.href = './register.php';
 }
-function open_sketch(name, width_top, width_middle, width_bottom, colour_R, colour_G, colour_B, mov_direction, mov_speed){
+function open_ss(name, width_top, width_middle, width_bottom, colour_R, colour_G, colour_B, mov_direction, mov_speed){
 
 	$.ajax({
 		url: './load_shape.php',
@@ -25,8 +25,8 @@ function open_sketch(name, width_top, width_middle, width_bottom, colour_R, colo
 		}
 	});
 }
-function open_ss(name){
-	window.location.href = './app.php?name='+name;
+function open_sketch(name){
+	window.location.href = './app.php?new=false&name='+name;
 }
 function create_new_sketch(){
 	window.location.href = './app.php?new=true&name=undefined';

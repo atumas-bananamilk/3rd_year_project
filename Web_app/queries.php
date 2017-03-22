@@ -56,26 +56,24 @@ class DBQuery
 		}
 	}
 
-	public static function get_project_by_username_and_project_name($username, $name){
+	public static function get_layers_by_username_and_project_name($username, $name){
 		global $conn;
 
-		$sql = "SELECT * FROM projects WHERE username = '".$username."' AND name = '".$name."'";
+		$sql = "SELECT * FROM layers WHERE username = '".$username."' AND name = '".$name."'";
 		$result = $conn->query($sql);
 
-		$projects = array();
+		$layers = array();
 		if ($result->num_rows > 0) {
 			while($row = $result->fetch_assoc()) {
-				$temp = array(	'width_top' 	=> $row['width_top'],
-								'width_middle' 	=> $row['width_middle'],
-								'width_bottom' 	=> $row['width_bottom'],
+				$temp = array(	'name'			=> $row['name'],
+								'layer_number'	=> $row['layer_number'],
+								'width' 		=> $row['width'],
 								'colour_R' 		=> $row['colour_R'],
 								'colour_G' 		=> $row['colour_G'],
-								'colour_B' 		=> $row['colour_B'],
-								'mov_direction' => $row['mov_direction'],
-								'mov_speed' 	=> $row['mov_speed']);
-				array_push($projects, $temp);
+								'colour_B' 		=> $row['colour_B']);
+				array_push($layers, $temp);
 			}
-			return $projects;
+			return $layers;
 		}
 	}
 
@@ -88,45 +86,51 @@ class DBQuery
 		$projects = array();
 		if ($result->num_rows > 0) {
 			while($row = $result->fetch_assoc()) {
-				$temp = array(	'name'			=> $row['name'],
-								'width_top' 	=> $row['width_top'],
-								'width_middle' 	=> $row['width_middle'],
-								'width_bottom' 	=> $row['width_bottom'],
-								'colour_R' 		=> $row['colour_R'],
-								'colour_G' 		=> $row['colour_G'],
-								'colour_B' 		=> $row['colour_B'],
-								'mov_direction' => $row['mov_direction'],
-								'mov_speed' 	=> $row['mov_speed']);
+				$temp = array('name' => $row['name']);
 				array_push($projects, $temp);
 			}
 			return $projects;
 		}
 	}
 
-
-	public static function getInternships($role, $company, $sector, $durationOption)
-	{
+	public static function update_layers_by_username_and_project_name_and_layer_number($all_layers){
 		global $conn;
+		/*
+		$sql = "INSERT INTO projects (width_top, width_middle, width_bottom, colour_R, colour_G, colour_B, mov_direction, mov_speed) VALUES ('".$project_info['width_top']."', '".
+					   $project_info['width_middle']."', '".
+					   $project_info['width_bottom']."', '".
+					   $project_info['colour_R']."', '".
+					   $project_info['colour_G']."', '".
+					   $project_info['colour_B']."', '".
+					   $project_info['mov_direction']."', '".
+					   $project_info['mov_speed']."') WHERE username = '".$project_info['username']."' AND name = '".$project_info['name']."'";
+		*/
 
-		$sql = "SELECT * FROM jobs WHERE Role LIKE '%".$role."%' AND Company LIKE '%".$company."%' AND Sector LIKE '%".$sector."%' AND DurationOption LIKE '%".$durationOption."%' AND Category = 'Internship' ORDER BY JID LIMIT 3";
+		$errors_occured = false;
+		$error_messages = "";
 
-		$result = $conn->query($sql);
+		for ($i = 0; $i < sizeof($all_layers); $i++){
+			$sql = "UPDATE layers SET ".
+					"width = ".$all_layers[$i]['width'].", ".
+					"colour_R = ".$all_layers[$i]['colour_R'].", ".
+					"colour_G = ".$all_layers[$i]['colour_G'].", ".
+					"colour_B = ".$all_layers[$i]['colour_B'].
+					" WHERE username = '".$all_layers[$i]['username']."' AND name = '".$all_layers[$i]['name']."' AND layer_number = ".$all_layers[$i]['layer_number'];
+			$result = $conn->query($sql);
 
-		$proposals = array();
-		if ($result->num_rows > 0) {
-			while($row = $result->fetch_assoc()) {
-				$temp = array(	'JID' => $row['JID'],
-								'Company' => $row['Company'],
-								'Role' => $row['Role'],
-								'Sector' => $row['Sector'],
-								'Category' => $row['Category'],
-								'Duration' => $row['Duration'],
-								'DurationOption' => $row['DurationOption'],
-								'Deadline' => $row['Deadline']);
-				array_push($proposals, $temp);
+			if ($result === FALSE) {
+			    $error_messages = "Error: ".$conn->error;
+			    $errors_occured = true;
 			}
-			return $proposals;
 		}
+
+		if ( !$errors_occured ){
+			return;
+		}
+		else{
+			return $error_messages;
+		}
+
 	}
 
 

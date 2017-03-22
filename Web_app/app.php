@@ -34,39 +34,46 @@ echo "<html>";
 	  	echo "<script src='./main_scripts.js'></script>";
 	echo "</head>";
 
-	// we assume that we own this project
-	// (assume there's no way for other users to change SESSION variables for this user)
-	// $name = $_SESSION['name'];
-	// $width_top = $_SESSION['width_top'];
-	// $width_middle = $_SESSION['width_middle'];
-	// $width_bottom = $_SESSION['width_bottom'];
-	// $colour_R = $_SESSION['colour_R'];
-	// $colour_G = $_SESSION['colour_G'];
-	// $colour_B = $_SESSION['colour_B'];
-	// $mov_direction = $_SESSION['mov_direction'];
-	// $mov_speed = $_SESSION['mov_speed'];
-
+	$new = $_GET['new'];
 	$name = $_GET['name'];
 
-	DBQuery::connect();
-	$project = DBQuery::get_project_by_username_and_project_name( $_SESSION['login_user'], $name );
-	DBQuery::disconnect();
+	if (isset($new) && $new == "true" && isset($name) && $name == "undefined"){
+		$layers = array();
+		for ($i = 1; $i <= 9; $i++){
+			$layer = array('username' => $_SESSION['login_user'],
+						   'name' => 'undefined',
+						   'layer_number' => $i,
+						   'width' => 10,
+						   'colour_R' => '200',
+						   'colour_G' => '0',
+						   'colour_B' => '200');
+			array_push($layers, $layer);
+		}
+	}
+	else{
+		DBQuery::connect();
+		$layers = DBQuery::get_layers_by_username_and_project_name( $_SESSION['login_user'], $name );
+		DBQuery::disconnect();
+	}
 
-	// if user tries to access someone else's project
-	if ( !isset($project) ){
+	// if user tries to access someone else's project's layers
+	if ( !isset($layers) ){
+		header("Location: ./dashboard.php");
+	}
+	// if returned a wrong number of layers for this project
+	if (sizeof($layers) != 9){
 		header("Location: ./dashboard.php");
 	}
 
-	$width_top = $project[0]['width_top'];
-	$width_middle = $project[0]['width_middle'];
-	$width_bottom = $project[0]['width_bottom'];
-	$colour_R = $project[0]['colour_R'];
-	$colour_G = $project[0]['colour_G'];
-	$colour_B = $project[0]['colour_B'];
-	$mov_direction = $project[0]['mov_direction'];
-	$mov_speed = $project[0]['mov_speed'];
-
-	echo "<body onload='load_JS(\"".$name."\", \"".$width_top."\", \"".$width_middle."\", \"".$width_bottom."\", \"".$colour_R."\", \"".$colour_G."\", \"".$colour_B."\", \"".$mov_direction."\", \"".$mov_speed."\")'>";
+	echo "<body onload='load_JS(".json_encode($layers[0]).", "
+								 .json_encode($layers[1]).", "
+								 .json_encode($layers[2]).", "
+								 .json_encode($layers[3]).", "
+								 .json_encode($layers[4]).", "
+								 .json_encode($layers[5]).", "
+								 .json_encode($layers[6]).", "
+								 .json_encode($layers[7]).", "
+								 .json_encode($layers[8]).")'>";
 
 	// if logged in
 	if (strlen($session_username) != 0){
@@ -78,33 +85,45 @@ echo "<html>";
 		echo "<div id='drawing_block'>";
 		echo "<img id='back_button' src='./images/back.png' onclick='go_back()'></img>";
 
+		if (isset($new) && $new == "true"){
+			echo "<img id='save_button_new_project' src='./images/save.png' onclick='create_project()'></img>";
+		}
+		else{
+			echo "<img id='save_button' src='./images/save.png' onclick='save_project()'></img>";
+		}
+		echo "<div id='layer_select'>";
+			echo "<img id='layer_1' src='./images/number_1_selected.png' onclick='select_layer(1)'></img>";
+			echo "<img id='layer_2' src='./images/number_2.png' onclick='select_layer(2)'></img>";
+			echo "<img id='layer_3' src='./images/number_3.png' onclick='select_layer(3)'></img>";
+			echo "<img id='layer_4' src='./images/number_4.png' onclick='select_layer(4)'></img>";
+			echo "<img id='layer_5' src='./images/number_5.png' onclick='select_layer(5)'></img>";
+			echo "<img id='layer_6' src='./images/number_6.png' onclick='select_layer(6)'></img>";
+			echo "<img id='layer_7' src='./images/number_7.png' onclick='select_layer(7)'></img>";
+			echo "<img id='layer_8' src='./images/number_8.png' onclick='select_layer(8)'></img>";
+			echo "<img id='layer_9' src='./images/number_9.png' onclick='select_layer(9)'></img>";
+		echo "</div>";
 
       echo "<div id='canvas_block'></div>";
       echo "<div id='control_block'>";
 	    echo "<div id='new_line'>";
-		    echo "TOP";
-		    echo "<input id='top_width_input' value='10'></input>";
-		    echo "<div id='top_width'></div>";
-		    echo "<br>";
-		    echo "X";
-		    echo "<div id='line_X'></div>";
-		    echo "<br>";
-		    echo "Y";
-		    echo "<div id='line_Y'></div>";
-		    echo "<br>";
-		    echo "Z";
-		    echo "<div id='line_Z'></div>";
-		    echo "<br>";
-		    echo "ROTATE X";
-		    echo "<div id='line_rotate_X'></div>";
-		    echo "<br>";
-		    echo "ROTATE Y";
-		    echo "<div id='line_rotate_Y'></div>";
-		    echo "<br>";
-		    echo "ROTATE Z";
-		    echo "<div id='line_rotate_Z'></div>";
 
-		    echo "<div class='control_buttons' onclick='show_result()'>SHOW RESULT</div>";
+		    echo "WIDTH";
+		    echo "<input id='width_input' value='".$layers[0]['width']."'></input>";
+		    echo "<div id='width_slider'></div><br>";
+
+		    echo "R";
+		    echo "<input id='colour_R_input' value='".$layers[0]['colour_R']."'></input>";
+		    echo "<div id='colour_R_slider'></div><br>";
+
+		    echo "G";
+		    echo "<input id='colour_G_input' value='".$layers[0]['colour_G']."'></input>";
+		    echo "<div id='colour_G_slider'></div><br>";
+
+		    echo "B";
+		    echo "<input id='colour_B_input' value='".$layers[0]['colour_B']."'></input>";
+		    echo "<div id='colour_B_slider'></div><br>";
+
+		    echo "<div class='control_buttons' onclick='show_result()'>RANDOM</div>";
 		    echo "<div class='control_buttons' onclick='clear_result()'>CLEAR RESULT</div>";
 		    echo "<div class='control_buttons' onclick='generate_coordinates()'>GENERATE COORDINATES</div>";
 		    echo "<div class='control_buttons' onclick='test_1()'>TEST 1</div>";
