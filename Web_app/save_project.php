@@ -10,6 +10,7 @@ require_once('queries.php');
 $session_username = (isset($_SESSION['login_user']) ? $_SESSION['login_user'] : "");
 
 $layers = $_POST['layers'];
+$previous_name = $_POST['previous_name'];
 
 // if logged in
 if (strlen($session_username) != 0){
@@ -26,7 +27,28 @@ if (strlen($session_username) != 0){
 	}
 
 	DBQuery::connect();
-	$query = DBQuery::update_layers_by_username_and_project_name_and_layer_number($all_layers);
-	echo $query;
+
+	$all_layers_returned = DBQuery::get_all_layers_by_username( $_SESSION['login_user'] );
+	$projects = array();
+
+	// if database returns something
+	if (isset($all_layers_returned)){
+		for ($i = 0; $i < sizeof($all_layers_returned); $i++){
+			if ( !in_array( $all_layers_returned[$i]['name'], $projects ) ){
+				array_push($projects, $all_layers_returned[$i]['name']);
+			}
+		}
+	}
+
+	// if ( strcmp($previous_name, $layers[0]['name']) == 0 ){
+	// 	echo "Project with this name already exists.";
+	// }
+	if ( strcmp($previous_name, $layers[0]['name']) != 0 && in_array( $layers[0]['name'], $projects ) ){
+		echo "Project with this name already exists.";
+	}
+	else{
+		$query = DBQuery::update_layers_by_username_and_project_name_and_layer_number($previous_name, $all_layers);
+		echo $query;
+	}
 	DBQuery::disconnect();
 }

@@ -89,7 +89,7 @@ echo "<html>";
 			echo "<img id='save_button_new_project' src='./images/save.png' onclick='create_project()'></img>";
 		}
 		else{
-			echo "<img id='save_button' src='./images/save.png' onclick='save_project()'></img>";
+			echo "<img id='save_button' src='./images/save.png' onclick='save_project(\"".$name."\")'></img>";
 		}
 		echo "<div id='layer_select'>";
 			echo "<img id='layer_1' src='./images/number_1_selected.png' onclick='select_layer(1)'></img>";
@@ -107,6 +107,9 @@ echo "<html>";
       echo "<div id='control_block'>";
 	    echo "<div id='new_line'>";
 
+		    echo "NAME";
+		    echo "<input id='name_input' value='".$name."'></input><br>";
+
 		    echo "WIDTH";
 		    echo "<input id='width_input' value='".$layers[0]['width']."'></input>";
 		    echo "<div id='width_slider'></div><br>";
@@ -123,11 +126,7 @@ echo "<html>";
 		    echo "<input id='colour_B_input' value='".$layers[0]['colour_B']."'></input>";
 		    echo "<div id='colour_B_slider'></div><br>";
 
-		    echo "<div class='control_buttons' onclick='show_result()'>RANDOM</div>";
-		    echo "<div class='control_buttons' onclick='clear_result()'>CLEAR RESULT</div>";
-		    echo "<div class='control_buttons' onclick='generate_coordinates()'>GENERATE COORDINATES</div>";
-		    echo "<div class='control_buttons' onclick='test_1()'>TEST 1</div>";
-		    echo "<div class='control_buttons' onclick='test_2()'>TEST 2</div>";
+		    echo "<div class='control_buttons' onclick='show_shape()'>SHOW SHAPE</div>";
 		    // echo "<div class='control_buttons' onclick='send_coordinates()'>SEND</div>";
 
 	    echo "</div>";

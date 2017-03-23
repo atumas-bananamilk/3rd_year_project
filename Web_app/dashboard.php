@@ -36,13 +36,18 @@ echo "<html>";
 
 		DBQuery::connect();
 
-		$projects = DBQuery::get_project_by_username( $_SESSION['login_user'] );
+		$all_layers = DBQuery::get_all_layers_by_username( $_SESSION['login_user'] );
+		$projects = array();
 
 		// if database returns something
-		if (isset($projects)){
-			$no_of_projects = sizeof($projects);
+		if (isset($all_layers)){
+			for ($i = 0; $i < sizeof($all_layers); $i++){
+				if ( !in_array( $all_layers[$i]['name'], $projects ) ){
+					array_push($projects, $all_layers[$i]['name']);
+				}
+			}
 
-			for ($i = 0; $i < $no_of_projects; $i++){
+			for ($i = 0; $i < sizeof($projects); $i++){
 				// echo "<div class='project_block' onclick='open_ss(\"".$projects[$i]['name']."\",
 				// 													  \"".$projects[$i]['width_top']."\",
 				// 													  \"".$projects[$i]['width_middle']."\",
@@ -53,8 +58,8 @@ echo "<html>";
 				// 													  \"".$projects[$i]['mov_direction']."\",
 				// 													  \"".$projects[$i]['mov_speed']."\")'>";
 
-				echo "<div class='project_block' onclick='open_sketch(\"".$projects[$i]['name']."\")'>";
-					echo $projects[$i]['name'];
+				echo "<div class='project_block' onclick='open_sketch(\"".$projects[$i]."\")'>";
+					echo $projects[$i];
 				echo "</div>";
 
 				if ( ($i + 2) % 5 == 0 ){

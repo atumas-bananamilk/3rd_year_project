@@ -77,10 +77,10 @@ class DBQuery
 		}
 	}
 
-	public static function get_project_by_username($username){
+	public static function get_all_layers_by_username($username){
 		global $conn;
 
-		$sql = "SELECT * FROM projects WHERE username = '".$username."'";
+		$sql = "SELECT * FROM layers WHERE username = '".$username."'";
 		$result = $conn->query($sql);
 
 		$projects = array();
@@ -93,29 +93,51 @@ class DBQuery
 		}
 	}
 
-	public static function update_layers_by_username_and_project_name_and_layer_number($all_layers){
+	public static function create_layers_by_username_and_project_name_and_layer_number($all_layers){
 		global $conn;
-		/*
-		$sql = "INSERT INTO projects (width_top, width_middle, width_bottom, colour_R, colour_G, colour_B, mov_direction, mov_speed) VALUES ('".$project_info['width_top']."', '".
-					   $project_info['width_middle']."', '".
-					   $project_info['width_bottom']."', '".
-					   $project_info['colour_R']."', '".
-					   $project_info['colour_G']."', '".
-					   $project_info['colour_B']."', '".
-					   $project_info['mov_direction']."', '".
-					   $project_info['mov_speed']."') WHERE username = '".$project_info['username']."' AND name = '".$project_info['name']."'";
-		*/
+		$errors_occured = false;
+		$error_messages = "";
 
+		for ($i = 0; $i < sizeof($all_layers); $i++){
+			$sql = "INSERT INTO layers (username, name, width, layer_number, colour_R, colour_G, colour_B) VALUES (".
+					"'".$all_layers[$i]['username']."', ".
+					"'".$all_layers[$i]['name']."', ".
+					$all_layers[$i]['width'].", ".
+					$all_layers[$i]['layer_number'].", ".
+					$all_layers[$i]['colour_R'].", ".
+					$all_layers[$i]['colour_G'].", ".
+					$all_layers[$i]['colour_B'].
+					")";
+			$result = $conn->query($sql);
+
+			if ($result === FALSE) {
+			    $error_messages = "Error: ".$conn->error;
+			    $errors_occured = true;
+			}
+		}
+
+		if ( !$errors_occured ){
+			return;
+		}
+		else{
+			return $error_messages;
+		}
+
+	}
+
+	public static function update_layers_by_username_and_project_name_and_layer_number($previous_name, $all_layers){
+		global $conn;
 		$errors_occured = false;
 		$error_messages = "";
 
 		for ($i = 0; $i < sizeof($all_layers); $i++){
 			$sql = "UPDATE layers SET ".
+					"name = '".$all_layers[$i]['name']."', ".
 					"width = ".$all_layers[$i]['width'].", ".
 					"colour_R = ".$all_layers[$i]['colour_R'].", ".
 					"colour_G = ".$all_layers[$i]['colour_G'].", ".
 					"colour_B = ".$all_layers[$i]['colour_B'].
-					" WHERE username = '".$all_layers[$i]['username']."' AND name = '".$all_layers[$i]['name']."' AND layer_number = ".$all_layers[$i]['layer_number'];
+					" WHERE username = '".$all_layers[$i]['username']."' AND name = '".$previous_name."' AND layer_number = ".$all_layers[$i]['layer_number'];
 			$result = $conn->query($sql);
 
 			if ($result === FALSE) {

@@ -220,16 +220,38 @@ function generate_coordinates(){
 	send_data_to_arduino(msg);
 }
 
-function send_data_to_arduino(msg){
+function show_shape(){
+	var encoded_data = encode_pixels();
+	// alert(encoded_data);
+	send_data_to_server(encoded_data);
+}
+
+function encode_pixels(){
+	var encoded_str = layers.length;
+	for (var i = 0; i < layers.length; i++){
+		encoded_str += ","+layers[i]['width'];
+		encoded_str += ","+layers[i]['colour_R'];
+		encoded_str += ","+layers[i]['colour_G'];
+		encoded_str += ","+layers[i]['colour_B'];
+	}
+	return encoded_str;
+}
+
+function send_data_to_server(data){
 	$.ajax({
 		url: './server.php',
 		type: 'POST',
-		data: {msg: msg},
+		data: {data: data},
 		success: function( response ){
-			alert("SUCCESS");
+			if (response.length == 0){
+				alert("Success!");
+			}
+			else{
+				alert(response);
+			}
 		},
 		error: function( response ){
-	   		alert("ERROR: "+response);
+	   		alert("Error: "+response);
 		}
 	});
 }
@@ -334,6 +356,11 @@ function draw_shapes(no_of_shapes, position_y, rotation_y){
 }
 
 function create_project(){
+	var name_typed = name_input.value;
+	for (var i = 0; i < NO_OF_LAYERS; i++){
+		layers[i]['name'] = name_typed;
+	}
+
 	$.ajax({
 		url: './create_project.php',
 		type: 'POST',
@@ -341,32 +368,39 @@ function create_project(){
 		success: function( response ){
 			if (response.length == 0){
 				alert("Project saved.");
+				window.location.href = './app.php?new=false&name='+name_typed;
 			}
 			else{
 				alert(response);
 			}
 		},
 		error: function( response ){
-	   		alert("ERROR: "+response);
+	   		alert("Error: "+response);
 		}
 	});
 }
 
-function save_project(){
+function save_project(previous_name){
+	var name_typed = name_input.value;
+	for (var i = 0; i < NO_OF_LAYERS; i++){
+		layers[i]['name'] = name_typed;
+	}
+
 	$.ajax({
 		url: './save_project.php',
 		type: 'POST',
-		data: {layers: layers},
+		data: {previous_name: previous_name, layers: layers},
 		success: function( response ){
 			if (response.length == 0){
 				alert("Project saved.");
+				window.location.href = './app.php?new=false&name='+name_typed;
 			}
 			else{
 				alert(response);
 			}
 		},
 		error: function( response ){
-	   		alert("ERROR: "+response);
+	   		alert("Error: "+response);
 		}
 	});
 }
