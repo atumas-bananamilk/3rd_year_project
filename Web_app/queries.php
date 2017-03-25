@@ -122,7 +122,6 @@ class DBQuery
 		else{
 			return $error_messages;
 		}
-
 	}
 
 	public static function update_layers_by_username_and_project_name_and_layer_number($previous_name, $all_layers){
@@ -152,8 +151,109 @@ class DBQuery
 		else{
 			return $error_messages;
 		}
-
 	}
 
+	public static function update_project_image($username, $name, $base64_img){
+		global $conn;
+		$errors_occured = false;
+		$error_messages = "";
+
+		$sql = "UPDATE images SET image = '".$base64_img."' WHERE username = '".$username."' AND name = '".$name."'";
+		$result = $conn->query($sql);
+
+		if ($result === FALSE) {
+		    $error_messages = "Error: ".$conn->error;
+		    $errors_occured = true;
+		}
+
+		if ( !$errors_occured ){
+			return;
+		}
+		else{
+			return $error_messages;
+		}
+	}
+
+	public static function save_project_image($username, $name, $base64_img){
+		global $conn;
+		$errors_occured = false;
+		$error_messages = "";
+
+		$sql = "INSERT INTO images (username, name, image) VALUES (".
+				"'".$username."', "."'".$name."', '".$base64_img."')";
+		$result = $conn->query($sql);
+
+		if ($result === FALSE) {
+		    $error_messages = "Error: ".$conn->error;
+		    $errors_occured = true;
+		}
+
+		if ( !$errors_occured ){
+			return;
+		}
+		else{
+			return $error_messages;
+		}
+	}
+
+	public static function get_project_image($username, $name){
+		global $conn;
+		$errors_occured = false;
+		$error_messages = "";
+
+		$sql = "SELECT image FROM images WHERE username = '".$username."' AND name = '".$name."'";
+		$result = $conn->query($sql);
+
+		$images = array();
+		if ($result->num_rows > 0) {
+			while($row = $result->fetch_assoc()) {
+				$temp = array('image' => $row['image']);
+				array_push($images, $temp);
+			}
+			return $images;
+		}
+	}
+
+	public static function delete_project($username, $name){
+		global $conn;
+		$errors_occured = false;
+		$error_messages = "";
+
+		$sql = "DELETE FROM layers WHERE username = '".$username."' AND name = '".$name."'";
+		$result = $conn->query($sql);
+
+		if ($result === FALSE) {
+		    $error_messages = "Error: ".$conn->error;
+		    $errors_occured = true;
+		}
+
+		if ( !$errors_occured ){
+			return;
+		}
+		else{
+			return $error_messages;
+		}
+	}
+
+	public static function delete_project_image($username, $name){
+		global $conn;
+		$errors_occured = false;
+		$error_messages = "";
+
+		$sql = "DELETE FROM images WHERE username = '".$username."' AND name = '".$name."'";
+		$result = $conn->query($sql);
+
+		if ($result === FALSE) {
+		    $error_messages = "Error: ".$conn->error;
+		    $errors_occured = true;
+		}
+
+		if ( !$errors_occured ){
+			return;
+		}
+		else{
+			return $error_messages;
+		}
+	}
 
 }

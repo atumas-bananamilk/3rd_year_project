@@ -77,62 +77,49 @@ echo "<html>";
 
 	// if logged in
 	if (strlen($session_username) != 0){
-		echo "Welcome!";
-		echo "<a href='./logout.php'>LOGOUT</a>";
-
-		echo "<br>";
+		require_once('header.php');
 
 		echo "<div id='drawing_block'>";
-		echo "<img id='back_button' src='./images/back.png' onclick='go_back()'></img>";
+		echo "<div id='back_button' onclick='go_back()'></div>";
 
 		if (isset($new) && $new == "true"){
-			echo "<img id='save_button_new_project' src='./images/save.png' onclick='create_project()'></img>";
+			echo "<div id='save_button_new_project' src='./images/save.png' onclick='create_project()'>SAVE</div>";
 		}
 		else{
-			echo "<img id='save_button' src='./images/save.png' onclick='save_project(\"".$name."\")'></img>";
+			echo "<div id='save_button' src='./images/save.png' onclick='update_project(\"".$name."\")'>SAVE</div>";
 		}
 		echo "<div id='layer_select'>";
-			echo "<img id='layer_1' src='./images/number_1_selected.png' onclick='select_layer(1)'></img>";
-			echo "<img id='layer_2' src='./images/number_2.png' onclick='select_layer(2)'></img>";
-			echo "<img id='layer_3' src='./images/number_3.png' onclick='select_layer(3)'></img>";
-			echo "<img id='layer_4' src='./images/number_4.png' onclick='select_layer(4)'></img>";
-			echo "<img id='layer_5' src='./images/number_5.png' onclick='select_layer(5)'></img>";
-			echo "<img id='layer_6' src='./images/number_6.png' onclick='select_layer(6)'></img>";
-			echo "<img id='layer_7' src='./images/number_7.png' onclick='select_layer(7)'></img>";
-			echo "<img id='layer_8' src='./images/number_8.png' onclick='select_layer(8)'></img>";
-			echo "<img id='layer_9' src='./images/number_9.png' onclick='select_layer(9)'></img>";
+			echo "<div id='layer_1' class='layer_options_selected' onclick='select_layer(1)'>1</div>";
+			echo "<div id='layer_2' class='layer_options' onclick='select_layer(2)'>2</div>";
+			echo "<div id='layer_3' class='layer_options' onclick='select_layer(3)'>3</div>";
+			echo "<div id='layer_4' class='layer_options' onclick='select_layer(4)'>4</div>";
+			echo "<div id='layer_5' class='layer_options' onclick='select_layer(5)'>5</div>";
+			echo "<div id='layer_6' class='layer_options' onclick='select_layer(6)'>6</div>";
+			echo "<div id='layer_7' class='layer_options' onclick='select_layer(7)'>7</div>";
+			echo "<div id='layer_8' class='layer_options' onclick='select_layer(8)'>8</div>";
+			echo "<div id='layer_9' class='layer_options' onclick='select_layer(9)'>9</div>";
 		echo "</div>";
 
       echo "<div id='canvas_block'></div>";
       echo "<div id='control_block'>";
-	    echo "<div id='new_line'>";
 
-		    echo "NAME";
+		    echo "Project name";
 		    echo "<input id='name_input' value='".$name."'></input><br>";
 
-		    echo "WIDTH";
-		    echo "<input id='width_input' value='".$layers[0]['width']."'></input>";
-		    echo "<div id='width_slider'></div><br>";
+		    echo "Layer width";
+		    echo "<div id='width_slider'></div>";
 
-		    echo "R";
-		    echo "<input id='colour_R_input' value='".$layers[0]['colour_R']."'></input>";
-		    echo "<div id='colour_R_slider'></div><br>";
+		    echo "Red";
+		    echo "<div id='colour_R_slider'></div>";
 
-		    echo "G";
-		    echo "<input id='colour_G_input' value='".$layers[0]['colour_G']."'></input>";
-		    echo "<div id='colour_G_slider'></div><br>";
+		    echo "Green";
+		    echo "<div id='colour_G_slider'></div>";
 
-		    echo "B";
-		    echo "<input id='colour_B_input' value='".$layers[0]['colour_B']."'></input>";
-		    echo "<div id='colour_B_slider'></div><br>";
+		    echo "Blue";
+		    echo "<div id='colour_B_slider'></div>";
 
-		    echo "<div class='control_buttons' onclick='show_shape()'>SHOW SHAPE</div>";
-		    // echo "<div class='control_buttons' onclick='send_coordinates()'>SEND</div>";
-
-	    echo "</div>";
-
+		    echo "<div id='run_button' onclick='run()'>RUN</div>";
       echo "</div>";
-
       echo "</div>";
 
 	}

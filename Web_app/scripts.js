@@ -220,7 +220,7 @@ function generate_coordinates(){
 	send_data_to_arduino(msg);
 }
 
-function show_shape(){
+function run(){
 	var encoded_data = encode_pixels();
 	// alert(encoded_data);
 	send_data_to_server(encoded_data);
@@ -361,14 +361,50 @@ function create_project(){
 		layers[i]['name'] = name_typed;
 	}
 
+	if (name_typed == "undefined"){
+		alert("Please choose a name for the project.");
+	}
+	else if ( save_project_info() ){
+    	save_project_image(name_typed);
+	}
+}
+
+function save_project_info(){
+	var success = false;
+
 	$.ajax({
 		url: './create_project.php',
 		type: 'POST',
 		data: {layers: layers},
+		async: false,
+		success: function( response ){
+			if (response.length == 0){
+				success = true;
+			}
+			else{
+				alert(response);
+			}
+		},
+		error: function( response ){
+	   		alert("Error: "+response);
+		}
+	});
+
+	return success;
+}
+
+function save_project_image(name){
+	var img = document.getElementById("main_canvas").toDataURL("image/png");
+
+	$.ajax({
+		url: './save_image.php',
+		type: 'POST',
+		data: {name: name, img: img},
+		async: false,
 		success: function( response ){
 			if (response.length == 0){
 				alert("Project saved.");
-				window.location.href = './app.php?new=false&name='+name_typed;
+				window.location.href = './app.php?new=false&name='+name;
 			}
 			else{
 				alert(response);
@@ -380,20 +416,17 @@ function create_project(){
 	});
 }
 
-function save_project(previous_name){
-	var name_typed = name_input.value;
-	for (var i = 0; i < NO_OF_LAYERS; i++){
-		layers[i]['name'] = name_typed;
-	}
+function update_project_info(previous_name){
+	var success = false;
 
 	$.ajax({
-		url: './save_project.php',
+		url: './update_project.php',
 		type: 'POST',
 		data: {previous_name: previous_name, layers: layers},
+		async: false,
 		success: function( response ){
 			if (response.length == 0){
-				alert("Project saved.");
-				window.location.href = './app.php?new=false&name='+name_typed;
+				success = true;
 			}
 			else{
 				alert(response);
@@ -403,6 +436,19 @@ function save_project(previous_name){
 	   		alert("Error: "+response);
 		}
 	});
+
+	return success;
+}
+
+function update_project(previous_name){
+	var name_typed = name_input.value;
+	for (var i = 0; i < NO_OF_LAYERS; i++){
+		layers[i]['name'] = name_typed;
+	}
+
+	if ( update_project_info(previous_name) ){
+    	save_project_image(name_typed);
+	}
 }
 
 function create_new_sketch(){
@@ -410,63 +456,81 @@ function create_new_sketch(){
 }
 
 function reset_layer_selects(){
-	document.getElementById("layer_1").src = "./images/number_1.png";
-	document.getElementById("layer_2").src = "./images/number_2.png";
-	document.getElementById("layer_3").src = "./images/number_3.png";
-	document.getElementById("layer_4").src = "./images/number_4.png";
-	document.getElementById("layer_5").src = "./images/number_5.png";
-	document.getElementById("layer_6").src = "./images/number_6.png";
-	document.getElementById("layer_7").src = "./images/number_7.png";
-	document.getElementById("layer_8").src = "./images/number_8.png";
-	document.getElementById("layer_9").src = "./images/number_9.png";
+	document.getElementById("layer_1").style.color = "#FFFFFF";
+	document.getElementById("layer_1").style.background = "#6daa44";
+	document.getElementById("layer_2").style.color = "#FFFFFF";
+	document.getElementById("layer_2").style.background = "#6daa44";
+	document.getElementById("layer_3").style.color = "#FFFFFF";
+	document.getElementById("layer_3").style.background = "#6daa44";
+	document.getElementById("layer_4").style.color = "#FFFFFF";
+	document.getElementById("layer_4").style.background = "#6daa44";
+	document.getElementById("layer_5").style.color = "#FFFFFF";
+	document.getElementById("layer_5").style.background = "#6daa44";
+	document.getElementById("layer_6").style.color = "#FFFFFF";
+	document.getElementById("layer_6").style.background = "#6daa44";
+	document.getElementById("layer_7").style.color = "#FFFFFF";
+	document.getElementById("layer_7").style.background = "#6daa44";
+	document.getElementById("layer_8").style.color = "#FFFFFF";
+	document.getElementById("layer_8").style.background = "#6daa44";
+	document.getElementById("layer_9").style.color = "#FFFFFF";
+	document.getElementById("layer_9").style.background = "#6daa44";
 }
 
 function select_layer(id){
 	reset_layer_selects();
 
 	switch(id){
-		case 1:{ 
-			document.getElementById("layer_1").src = "./images/number_1_selected.png"; 
+		case 1:{
+			document.getElementById("layer_1").style.color = "#6daa44";
+			document.getElementById("layer_1").style.background = "#FFFFFF";
 			LAYER_SELECTED = 1;
 			break; 
 		}
-		case 2:{ 
-			document.getElementById("layer_2").src = "./images/number_2_selected.png"; 
+		case 2:{
+			document.getElementById("layer_2").style.color = "#6daa44";
+			document.getElementById("layer_2").style.background = "#FFFFFF";
 			LAYER_SELECTED = 2;
 			break; 
 		}
-		case 3:{ 
-			document.getElementById("layer_3").src = "./images/number_3_selected.png"; 
+		case 3:{
+			document.getElementById("layer_3").style.color = "#6daa44";
+			document.getElementById("layer_3").style.background = "#FFFFFF";
 			LAYER_SELECTED = 3;
 			break; 
 		}
-		case 4:{ 
-			document.getElementById("layer_4").src = "./images/number_4_selected.png"; 
+		case 4:{
+			document.getElementById("layer_4").style.color = "#6daa44";
+			document.getElementById("layer_4").style.background = "#FFFFFF";
 			LAYER_SELECTED = 4;
 			break; 
 		}
-		case 5:{ 
-			document.getElementById("layer_5").src = "./images/number_5_selected.png"; 
+		case 5:{
+			document.getElementById("layer_5").style.color = "#6daa44";
+			document.getElementById("layer_5").style.background = "#FFFFFF";
 			LAYER_SELECTED = 5;
 			break; 
 		}
-		case 6:{ 
-			document.getElementById("layer_6").src = "./images/number_6_selected.png"; 
+		case 6:{
+			document.getElementById("layer_6").style.color = "#6daa44";
+			document.getElementById("layer_6").style.background = "#FFFFFF";
 			LAYER_SELECTED = 6;
 			break; 
 		}
-		case 7:{ 
-			document.getElementById("layer_7").src = "./images/number_7_selected.png"; 
+		case 7:{
+			document.getElementById("layer_7").style.color = "#6daa44";
+			document.getElementById("layer_7").style.background = "#FFFFFF";
 			LAYER_SELECTED = 7;
 			break; 
 		}
-		case 8:{ 
-			document.getElementById("layer_8").src = "./images/number_8_selected.png"; 
+		case 8:{
+			document.getElementById("layer_8").style.color = "#6daa44";
+			document.getElementById("layer_8").style.background = "#FFFFFF";
 			LAYER_SELECTED = 8;
 			break; 
 		}
-		case 9:{ 
-			document.getElementById("layer_9").src = "./images/number_9_selected.png"; 
+		case 9:{
+			document.getElementById("layer_9").style.color = "#6daa44";
+			document.getElementById("layer_9").style.background = "#FFFFFF";
 			LAYER_SELECTED = 9;
 			break; 
 		}
@@ -516,21 +580,20 @@ function setup_slider(slider_id, default_val, min_val, max_val, step){
 	    	max: max_val,
 	    	step: step,
 	    	slide: function( event, ui ) {
+	            $( slider_id ).val( ui.value );
+	            $(this).find('.ui-slider-handle').text(ui.value);
+
 		        if (slider_id == "#width_slider"){
 					layers[LAYER_SELECTED - 1]['width'] = ui.value;
-		        	document.getElementById("width_input").value = ui.value;
 		        }
 		        else if (slider_id == "#colour_R_slider"){
 					layers[LAYER_SELECTED - 1]['colour_R'] = ui.value;
-		        	document.getElementById("colour_R_input").value = ui.value;
 		        }
 		        else if (slider_id == "#colour_G_slider"){
 					layers[LAYER_SELECTED - 1]['colour_G'] = ui.value;
-		        	document.getElementById("colour_G_input").value = ui.value;
 		        }
 		        else if (slider_id == "#colour_B_slider"){
 					layers[LAYER_SELECTED - 1]['colour_B'] = ui.value;
-		        	document.getElementById("colour_B_input").value = ui.value;
 		        }
 				redraw_layer();
 	    	}
@@ -539,15 +602,15 @@ function setup_slider(slider_id, default_val, min_val, max_val, step){
 }
 
 function setup_UI(){
-	document.getElementById("width_input").value = layers[LAYER_SELECTED - 1]['width'];
-	document.getElementById("colour_R_input").value = layers[LAYER_SELECTED - 1]['colour_R'];
-	document.getElementById("colour_G_input").value = layers[LAYER_SELECTED - 1]['colour_G'];
-	document.getElementById("colour_B_input").value = layers[LAYER_SELECTED - 1]['colour_B'];
-
 	setup_slider( "#width_slider", layers[LAYER_SELECTED - 1]['width'], 1, 16, 1 );
 	setup_slider( "#colour_R_slider", layers[LAYER_SELECTED - 1]['colour_R'], 0, 255, 1 );
 	setup_slider( "#colour_G_slider", layers[LAYER_SELECTED - 1]['colour_G'], 0, 255, 1 );
 	setup_slider( "#colour_B_slider", layers[LAYER_SELECTED - 1]['colour_B'], 0, 255, 1 );
+
+    $("#width_slider").find('.ui-slider-handle').text( layers[LAYER_SELECTED - 1]['width'] );
+    $("#colour_R_slider").find('.ui-slider-handle').text( layers[LAYER_SELECTED - 1]['colour_R'] );
+    $("#colour_G_slider").find('.ui-slider-handle').text( layers[LAYER_SELECTED - 1]['colour_G'] );
+    $("#colour_B_slider").find('.ui-slider-handle').text( layers[LAYER_SELECTED - 1]['colour_B'] );
 }
 
 function setup_layers(layer_1_given, layer_2_given, layer_3_given, layer_4_given, layer_5_given, layer_6_given, layer_7_given, layer_8_given, layer_9_given){
@@ -567,10 +630,11 @@ function load_JS(layer_1_given, layer_2_given, layer_3_given, layer_4_given, lay
 	setup_UI();
 
 	scene = new THREE.Scene();
-	scene.background = new THREE.Color( 0x000000 );
+	scene.background = new THREE.Color( 0x222222 );
 	camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-	renderer = new THREE.WebGLRenderer({ antialias: true, autoSize: true });
+	renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, autoSize: true });
+	renderer.domElement.id = "main_canvas";
 	renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize(window.innerWidth / 1.40, window.innerHeight / 1.40);
 

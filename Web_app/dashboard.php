@@ -23,10 +23,12 @@ echo "<html>";
 
 	// if logged in
 	if (strlen($session_username) != 0){
-		echo "Welcome!";
-		echo "<a href='./logout.php'>LOGOUT</a>";
+		require_once('header.php');
 
-		echo "<br>";
+		echo "<div id='header'>";
+			echo "<div id='title'>3D POV Semi-Hologram</div>";
+			echo "<div id='logout_button' onclick='logout()'>LOGOUT</div>";
+		echo "</div>";
 
 		echo "<div id='projects_dashboard'>";
 
@@ -48,23 +50,18 @@ echo "<html>";
 			}
 
 			for ($i = 0; $i < sizeof($projects); $i++){
-				// echo "<div class='project_block' onclick='open_ss(\"".$projects[$i]['name']."\",
-				// 													  \"".$projects[$i]['width_top']."\",
-				// 													  \"".$projects[$i]['width_middle']."\",
-				// 													  \"".$projects[$i]['width_bottom']."\",
-				// 													  \"".$projects[$i]['colour_R']."\",
-				// 													  \"".$projects[$i]['colour_G']."\",
-				// 													  \"".$projects[$i]['colour_B']."\",
-				// 													  \"".$projects[$i]['mov_direction']."\",
-				// 													  \"".$projects[$i]['mov_speed']."\")'>";
-
-				echo "<div class='project_block' onclick='open_sketch(\"".$projects[$i]."\")'>";
-					echo $projects[$i];
+				echo "<div class='project_block'>";
+					echo "<div class='project_top'>";
+						echo "<div class='project_title'>".$projects[$i]."</div>";
+						echo "<div class='project_delete_button_holder'>";
+							echo "<img class='project_delete_button' src='./images/delete.png' onclick='ask_to_delete_project(\"".$projects[$i]."\")'></img>";
+						echo "</div>";
+					echo "</div>";
+					$project_img = DBQuery::get_project_image( $_SESSION['login_user'], $projects[$i] );
+					echo "<div class='project_bottom' onclick='open_sketch(\"".$projects[$i]."\")'>";
+						echo "<img class='project_image' src='".$project_img[0]['image']."'></img>";
+					echo "</div>";
 				echo "</div>";
-
-				if ( ($i + 2) % 5 == 0 ){
-					echo "<br>";
-				}
 			}
 		}
 
