@@ -12,12 +12,14 @@ echo "<html>";
 	echo "</head>";
 	echo "<body>";
 
+	echo "<div id='top_name'>3D Persistence of Vision</div>";
 	echo "<div id='holder'>";
 		echo "<form action='' method='post'>";
 				echo "<input class='index_fields' id='loginUsername' name='loginUsername' placeholder='Username' type='text'>";
 				echo "<input class='index_fields' id='loginPassword' name='loginPassword' placeholder='Password' type='password'>";
 				echo "<span>"; echo "<br/>".$error; echo "</span>";
 			echo "<input class='index_buttons' name='submitLogin' type='submit' value='LOGIN'></input>";
+			echo "OR<br>";
 			echo "<div class='index_buttons' id='register_button' onclick='register()'>REGISTER</div>";
 		echo "</form>";
 	echo "</div>";

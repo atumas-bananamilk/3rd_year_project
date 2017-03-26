@@ -111,25 +111,6 @@ function create_new_line(x_given, y_given, z_given){
 	lines.push(line);
 }
 
-function test_1(){
-	create_new_line(30,4,0);
-	create_new_line(-30,4,1);
-	create_new_line(0,4,30);
-	create_new_line(0,4,-30);
-}
-
-function test_2(){
-	create_new_line(30,7,0);
-	create_new_line(-30,7,1);
-	create_new_line(0,7,30);
-	create_new_line(0,7,-30);
-
-	// create_new_line(21.2,7,21.8);
-	// create_new_line(-21.2,7,-21.8);
-	// create_new_line(-21.2,7,21.8);
-	// create_new_line(21.2,7,-21.8);
-}
-
 function is_colliding(object_1, object_2){
 	var object_box_1 = new THREE.Box3().setFromObject(object_1);
 	var object_box_2 = new THREE.Box3().setFromObject(object_2);
@@ -668,80 +649,4 @@ function load_JS(layer_1_given, layer_2_given, layer_3_given, layer_4_given, lay
 	};
 
 	render();
-	}
-
-function start_left(){ ROTATION_X = 0.02; }
-function stop_left(){ ROTATION_X = 0; }
-function start_right(){ ROTATION_X = -0.02; }
-function stop_right(){ ROTATION_X = 0; }
-function start_up(){ ROTATION_Y = 0.02; }
-function stop_up(){ ROTATION_Y = 0; }
-function start_down(){ ROTATION_Y = -0.02; }
-function stop_down(){ ROTATION_Y = 0; }
-
-function camera_X_in_start(){ CAMERA_X += 0.2; }
-function camera_X_in_stop(){ CAMERA_X = 0; }
-function camera_X_out_start(){ CAMERA_X -= 0.2; }
-function camera_X_out_stop(){ CAMERA_X = 0; }
-
-function camera_Y_in_start(){ CAMERA_Y += 0.2; }
-function camera_Y_in_stop(){ CAMERA_Y = 0; }
-function camera_Y_out_start(){ CAMERA_Y -= 0.2; }
-function camera_Y_out_stop(){ CAMERA_Y = 0; }
-
-function camera_Z_in_start(){ CAMERA_Z += 0.2; }
-function camera_Z_in_stop(){ CAMERA_Z = 0; }
-function camera_Z_out_start(){ CAMERA_Z -= 0.2; }
-function camera_Z_out_stop(){ CAMERA_Z = 0; }
-
-
-/*function move_with_mouse(renderer){
-
-var previousMousePosition = {
-   x: 0,
-   y: 0
-};
-$(renderer.domElement).on('mousedown', function(e) {
-   
-    isDragging = true;
-
-})
-.on('mousemove', function(e) {
-
-   var deltaMove = {
-       x: e.offsetX-previousMousePosition.x,
-       y: e.offsetY-previousMousePosition.y
-   };
-
-   if(isDragging) {
-           
-       var deltaRotationQuaternion = new THREE.Quaternion()
-           .setFromEuler(new THREE.Euler(
-               toRadians(deltaMove.y * 1),
-               toRadians(deltaMove.x * 1),
-               0,
-               'XYZ'
-           ));
-       
-       cubes[0].quaternion.multiplyQuaternions(deltaRotationQuaternion, cubes[0].quaternion);
-   }
-   
-   previousMousePosition = {
-       x: e.offsetX,
-       y: e.offsetY
-   };
-});
-
-$(document).on('mouseup', function(e) {
-   isDragging = false;
-});
 }
-
-function toRadians(angle) {
-    return angle * (Math.PI / 180);
-}*/
-
-
-
-
-

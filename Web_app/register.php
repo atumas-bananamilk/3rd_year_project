@@ -12,6 +12,7 @@ echo "<html>";
 	echo "</head>";
 	echo "<body>";
 
+	echo "<div id='top_name'>Register</div>";
 	echo "<div id='holder'>";
 		echo "<form action='' method='post'>";
 				echo "<input class='index_fields' id='loginUsername' name='loginUsername' placeholder='Username' type='text'>";
