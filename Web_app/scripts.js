@@ -23,8 +23,6 @@ var coordinates = [];
 // var line;
 
 var lines = [];
-
-var NO_OF_LAYERS = 9;
 var NO_OF_TIME_SLOTS = 45;
 var NO_OF_PIXELS_IN_LAYER = 15 * NO_OF_TIME_SLOTS + 1;
 
@@ -33,6 +31,10 @@ var NO_OF_PIXELS_IN_LAYER = 15 * NO_OF_TIME_SLOTS + 1;
 var shape_top;
 var shape_values;
 var LAYER_SELECTED = 1;
+
+var NO_OF_LAYERS = 9;
+var NO_OF_LEDS_ON_LAYER = 16;
+var COLOUR_MAX_VALUE = 255;
 
 var layers = [];
 
@@ -200,6 +202,11 @@ function generate_coordinates(){
 	alert(msg);
 	send_data_to_arduino(msg);
 }
+
+function square (num){
+	if (typeof num != 'number') return "not a number typed";
+	return num*num;
+};
 
 function run(){
 	var encoded_data = encode_pixels();
@@ -565,16 +572,16 @@ function setup_slider(slider_id, default_val, min_val, max_val, step){
 	            $(this).find('.ui-slider-handle').text(ui.value);
 
 		        if (slider_id == "#width_slider"){
-					layers[LAYER_SELECTED - 1]['width'] = ui.value;
+		        	set_layer_width(layers, LAYER_SELECTED, ui.value);
 		        }
 		        else if (slider_id == "#colour_R_slider"){
-					layers[LAYER_SELECTED - 1]['colour_R'] = ui.value;
+		        	set_layer_colour_R(layers, LAYER_SELECTED, ui.value);
 		        }
 		        else if (slider_id == "#colour_G_slider"){
-					layers[LAYER_SELECTED - 1]['colour_G'] = ui.value;
+		        	set_layer_colour_G(layers, LAYER_SELECTED, ui.value);
 		        }
 		        else if (slider_id == "#colour_B_slider"){
-					layers[LAYER_SELECTED - 1]['colour_B'] = ui.value;
+		        	set_layer_colour_B(layers, LAYER_SELECTED, ui.value);
 		        }
 				redraw_layer();
 	    	}
@@ -594,20 +601,92 @@ function setup_UI(){
     $("#colour_B_slider").find('.ui-slider-handle').text( layers[LAYER_SELECTED - 1]['colour_B'] );
 }
 
-function setup_layers(layer_1_given, layer_2_given, layer_3_given, layer_4_given, layer_5_given, layer_6_given, layer_7_given, layer_8_given, layer_9_given){
-	layers.push(layer_1_given);
-	layers.push(layer_2_given);
-	layers.push(layer_3_given);
-	layers.push(layer_4_given);
-	layers.push(layer_5_given);
-	layers.push(layer_6_given);
-	layers.push(layer_7_given);
-	layers.push(layer_8_given);
-	layers.push(layer_9_given);
+function get_layer_username(){
+	return layers[LAYER_SELECTED - 1]['username'];
+}
+function get_layer_name(){
+	return layers[LAYER_SELECTED - 1]['name'];
+}
+function get_layer_number(){
+	return layers[LAYER_SELECTED - 1]['layer_number'];
+}
+function get_layer_width(){
+	return layers[LAYER_SELECTED - 1]['width'];
+}
+function get_layer_colour_R(){
+	return layers[LAYER_SELECTED - 1]['colour_R'];
+}
+function get_layer_colour_G(){
+	return layers[LAYER_SELECTED - 1]['colour_G'];
+}
+function get_layer_colour_B(){
+	return layers[LAYER_SELECTED - 1]['colour_B'];
 }
 
-function load_JS(layer_1_given, layer_2_given, layer_3_given, layer_4_given, layer_5_given, layer_6_given, layer_7_given, layer_8_given, layer_9_given){
-	setup_layers(layer_1_given, layer_2_given, layer_3_given, layer_4_given, layer_5_given, layer_6_given, layer_7_given, layer_8_given, layer_9_given);
+function set_layer_width(layer_array, layer_id, width){
+	if (width < 1 || width > NO_OF_LEDS_ON_LAYER){
+		return "(set_layer_width) Layer width out of range (given: "+width+").";
+	}
+	else{
+		layer_array[layer_id - 1]['width'] = width;
+		return layer_array;
+	}
+}
+function set_layer_colour_R(layer_array, layer_id, colour_R){
+	if (colour_R < 0 || colour_R > COLOUR_MAX_VALUE){
+		return "(set_layer_colour_R) Layer red colour out of range (given: "+colour_R+").";
+	}
+	else{
+		layer_array[layer_id - 1]['colour_R'] = colour_R;
+		return layer_array;
+	}
+}
+function set_layer_colour_G(layer_array, layer_id, colour_G){
+	if (colour_G < 0 || colour_G > COLOUR_MAX_VALUE){
+		return "(set_layer_colour_G) Layer green colour out of range (given: "+colour_G+").";
+	}
+	else{
+		layer_array[layer_id - 1]['colour_G'] = colour_G;
+		return layer_array;
+	}
+}
+function set_layer_colour_B(layer_array, layer_id, colour_B){
+	if (colour_B < 0 || colour_B > COLOUR_MAX_VALUE){
+		return "(set_layer_colour_B) Layer blue colour out of range (given: "+colour_B+").";
+	}
+	else{
+		layer_array[layer_id - 1]['colour_B'] = colour_B;
+		return layer_array;
+	}
+}
+
+function add_layer(layer_array, layer){
+	if (layer['layer_number'] < 1 || layer['layer_number'] > NO_OF_LAYERS){
+		return "(add_layer) Layer number out of range (given: "+layer['layer_number']+").";
+	}
+	else if (layer['width'] < 1 || layer['width'] > NO_OF_LEDS_ON_LAYER){
+		return "(add_layer) Layer width out of range (given: "+layer['width']+").";
+	}
+	else if (layer['colour_R'] < 0 || layer['colour_R'] > COLOUR_MAX_VALUE){
+		return "(add_layer) Layer red colour out of range (given: "+layer['colour_R']+").";
+	}
+	else if (layer['colour_G'] < 0 || layer['colour_G'] > COLOUR_MAX_VALUE){
+		return "(add_layer) Layer green colour out of range (given: "+layer['colour_G']+").";
+	}
+	else if (layer['colour_B'] < 0 || layer['colour_B'] > COLOUR_MAX_VALUE){
+		return "(add_layer) Layer blue colour out of range (given: "+layer['colour_B']+").";
+	}
+	else{
+		layer_array.push(layer);
+		return layer_array;
+	}
+}
+
+function load_JS(layers_given){
+	for (var i = 0; i < layers_given.length; i++){
+		add_layer(layers, layers_given[i]);
+	}
+
 	setup_UI();
 
 	scene = new THREE.Scene();
@@ -634,8 +713,6 @@ function load_JS(layer_1_given, layer_2_given, layer_3_given, layer_4_given, lay
 	// axes
 	scene.add( new THREE.AxisHelper(30) );
 
-    //move_with_mouse(renderer);
-
 	clear_result();
 
 	function render(){
@@ -644,7 +721,6 @@ function load_JS(layer_1_given, layer_2_given, layer_3_given, layer_4_given, lay
 		camera.position.z += CAMERA_Z;
 
 		requestAnimationFrame( render );
-
 		renderer.render(scene, camera);
 	};
 

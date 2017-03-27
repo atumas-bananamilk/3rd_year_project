@@ -6,17 +6,15 @@ if ( !isset($_SESSION) ){
 
 require_once('queries.php');
 
+$NO_OF_LAYERS = 9;
+$DEFAULT_name = "undefined";
+$DEFAULT_width = 10;
+$DEFAULT_colour_R = 200;
+$DEFAULT_colour_G = 0;
+$DEFAULT_colour_B = 200;
+
 // define session by username
 $session_username = (isset($_SESSION['login_user']) ? $_SESSION['login_user'] : "");
-
-// echo "<html>";
-// 	echo "<head>";
-// 		echo "<meta charset='utf-8'>";
-// 		echo "<meta name='viewport' content='width=device-width'>";
-// 		echo "<title>Dashboard | POV 3D</title>";
-// 	  	echo "<link rel='stylesheet' type='text/css' href='./style.css'>";
-// 	  	echo "<script src='./scripts.js'></script>";
-// 	echo "</head>";
 
 echo "<html>";
 	echo "<head>";
@@ -41,12 +39,12 @@ echo "<html>";
 		$layers = array();
 		for ($i = 1; $i <= 9; $i++){
 			$layer = array('username' => $_SESSION['login_user'],
-						   'name' => 'undefined',
+						   'name' => $DEFAULT_name,
 						   'layer_number' => $i,
-						   'width' => 10,
-						   'colour_R' => '200',
-						   'colour_G' => '0',
-						   'colour_B' => '200');
+						   'width' => $DEFAULT_width,
+						   'colour_R' => $DEFAULT_colour_R,
+						   'colour_G' => $DEFAULT_colour_G,
+						   'colour_B' => $DEFAULT_colour_B);
 			array_push($layers, $layer);
 		}
 	}
@@ -60,24 +58,16 @@ echo "<html>";
 	if ( !isset($layers) ){
 		header("Location: ./dashboard.php");
 	}
-	// if returned a wrong number of layers for this project
-	if (sizeof($layers) != 9){
+	// if returned the wrong number of layers for this project
+	if (sizeof($layers) != $NO_OF_LAYERS){
 		header("Location: ./dashboard.php");
 	}
-
-	echo "<body onload='load_JS(".json_encode($layers[0]).", "
-								 .json_encode($layers[1]).", "
-								 .json_encode($layers[2]).", "
-								 .json_encode($layers[3]).", "
-								 .json_encode($layers[4]).", "
-								 .json_encode($layers[5]).", "
-								 .json_encode($layers[6]).", "
-								 .json_encode($layers[7]).", "
-								 .json_encode($layers[8]).")'>";
 
 	// if logged in
 	if (strlen($session_username) != 0){
 		require_once('header.php');
+
+		echo "<body onload='load_JS(".json_encode($layers).")'>";
 
 		echo "<div id='drawing_block'>";
 		echo "<div id='back_button' onclick='go_back()'></div>";

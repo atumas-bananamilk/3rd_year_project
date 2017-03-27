@@ -32,7 +32,7 @@ echo "<html>";
 
 		echo "<div id='projects_dashboard'>";
 
-		echo "<div class='new_project_block' onclick='create_new_sketch()'>";
+		echo "<div id='new_project' class='new_project_block' onclick='create_new_sketch()'>";
 			echo "<img id='add_new_project_logo' src='./images/add_new_project.png'></img>";
 		echo "</div>";
 

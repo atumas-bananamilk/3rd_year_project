@@ -1,5 +1,5 @@
 <?php
-include "./PhpSerial.php";
+include "./libs/PHPSERIAL/PhpSerial.php";
 
 $comPort = "/dev/cu.usbmodem97"; //The com port address. This is a debian address
 

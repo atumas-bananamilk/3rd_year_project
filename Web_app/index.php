@@ -15,12 +15,12 @@ echo "<html>";
 	echo "<div id='top_name'>3D Persistence of Vision</div>";
 	echo "<div id='holder'>";
 		echo "<form action='' method='post'>";
-				echo "<input class='index_fields' id='loginUsername' name='loginUsername' placeholder='Username' type='text'>";
-				echo "<input class='index_fields' id='loginPassword' name='loginPassword' placeholder='Password' type='password'>";
+				echo "<input id='loginUsername' class='index_fields' name='loginUsername' placeholder='Username' type='text'>";
+				echo "<input id='loginPassword' class='index_fields' name='loginPassword' placeholder='Password' type='password'>";
 				echo "<span>"; echo "<br/>".$error; echo "</span>";
-			echo "<input class='index_buttons' name='submitLogin' type='submit' value='LOGIN'></input>";
+			echo "<input id='login_button' class='index_buttons' name='submitLogin' type='submit' value='LOGIN'></input>";
 			echo "OR<br>";
-			echo "<div class='index_buttons' id='register_button' onclick='register()'>REGISTER</div>";
+			echo "<div id='register_button' class='index_buttons' id='register_button' onclick='register()'>REGISTER</div>";
 		echo "</form>";
 	echo "</div>";
 
