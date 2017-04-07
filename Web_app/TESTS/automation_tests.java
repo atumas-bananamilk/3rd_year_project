@@ -21,7 +21,6 @@ import org.openqa.selenium.interactions.Actions;
 public class AutomationTests {
 	
 	/* Global variables */
-	
 	// Use this for Firefox
 	private String driver_type_gecko = "webdriver.gecko.driver";
 	private String url_gecko = "/Users/aivarastumas/Desktop/geckodriver";
@@ -47,7 +46,7 @@ public class AutomationTests {
 	    driver.quit();
 	}
 	
-//	@Test
+	@Test
 	public void login() throws Exception{
     	driver.get(url_app + "index.php");
     	driver.findElement(By.id("loginUsername")).sendKeys("admin");
@@ -55,13 +54,13 @@ public class AutomationTests {
     	driver.findElement(By.id("login_button")).click();
 	}
 	
-//	@Test
+	@Test
 	public void start_new_project() throws Exception{
 		login();
     	driver.findElement(By.id("new_project")).click();
 	}
 	
-//	@Test
+	@Test
 	public void check_new_project_values_in_javascript() throws Exception{
 		start_new_project();
 		
@@ -74,16 +73,16 @@ public class AutomationTests {
 		colour_G = js.executeScript("return get_layer_colour_G();");
 		colour_B = js.executeScript("return get_layer_colour_B();");
 
-    	assertEquals(username, "admin");
-    	assertEquals(name, "undefined");
-    	assertEquals(layer_number, 1L);
-    	assertEquals(width, 10L);
-    	assertEquals(colour_R, 200L);
-    	assertEquals(colour_G, 0L);
-    	assertEquals(colour_B, 200L);
+    	assertEquals("admin", username);
+    	assertEquals("undefined", name);
+    	assertEquals(1L, layer_number);
+    	assertEquals(10L, width);
+    	assertEquals(200L, colour_R);
+    	assertEquals(0L, colour_G);
+    	assertEquals(200L, colour_B);
 	}
-	
-//	@Test
+
+	@Test
 	public void check_new_project_values_in_UI() throws Exception{
 		start_new_project();
 		
@@ -94,14 +93,14 @@ public class AutomationTests {
 		colour_G = driver.findElement(By.xpath("//div[@id='colour_G_slider']/span[@class='ui-slider-handle ui-state-default ui-corner-all']")).getText();             
 		colour_B = driver.findElement(By.xpath("//div[@id='colour_B_slider']/span[@class='ui-slider-handle ui-state-default ui-corner-all']")).getText();             
 
-		assertEquals(name, "undefined");
-		assertEquals(width, "10");
-		assertEquals(colour_R, "200");
-		assertEquals(colour_G, "0");
-		assertEquals(colour_B, "200");
+		assertEquals("undefined", name);
+		assertEquals("10", width);
+		assertEquals("200", colour_R);
+		assertEquals("0", colour_G);
+		assertEquals("200", colour_B);
 	}
-	
-//	@Test
+
+	@Test
 	public void change_new_project_width_in_UI() throws Exception{
 		start_new_project();
 
@@ -110,32 +109,32 @@ public class AutomationTests {
 
 		slide_right(slider, 1);
 		width = slider.getText();
-		assertEquals(width, "11");
+		assertEquals("11", width);
 
 		slide_right(slider, 5);
 		width = slider.getText();
-		assertEquals(width, "16");
+		assertEquals("16", width);
 
 		// out of bounds - should still stay at 16
 		slide_right(slider, 1);
 		width = slider.getText();
-		assertEquals(width, "16");
+		assertEquals("16", width);
 
 		slide_left(slider, 1);
 		width = slider.getText();
-		assertEquals(width, "15");
+		assertEquals("15", width);
 
 		slide_left(slider, 14);
 		width = slider.getText();
-		assertEquals(width, "1");
+		assertEquals("1", width);
 
 		// out of bounds - should still stay at 1
 		slide_left(slider, 1);
 		width = slider.getText();
-		assertEquals(width, "1");
+		assertEquals("1", width);
 	}
 	
-//	@Test
+	@Test
 	public void change_new_project_red_colour_in_UI() throws Exception{
 		start_new_project();
 
@@ -144,32 +143,32 @@ public class AutomationTests {
 
 		slide_right(slider, 1);
 		colour_R = slider.getText();
-		assertEquals(colour_R, "201");
+		assertEquals("201", colour_R);
 
 		slide_right(slider, 54);
 		colour_R = slider.getText();
-		assertEquals(colour_R, "255");
+		assertEquals("255", colour_R);
 
 		// out of bounds - should still stay at 255
 		slide_right(slider, 1);
 		colour_R = slider.getText();
-		assertEquals(colour_R, "255");
+		assertEquals("255", colour_R);
 
 		slide_left(slider, 1);
 		colour_R = slider.getText();
-		assertEquals(colour_R, "254");
+		assertEquals("254", colour_R);
 
 		slide_left(slider, 254);
 		colour_R = slider.getText();
-		assertEquals(colour_R, "0");
+		assertEquals("0", colour_R);
 
 		// out of bounds - should still stay at 0
 		slide_left(slider, 1);
 		colour_R = slider.getText();
-		assertEquals(colour_R, "0");
+		assertEquals("0", colour_R);
 	}
 	
-//	@Test
+	@Test
 	public void change_new_project_green_colour_in_UI() throws Exception{
 		start_new_project();
 
@@ -179,27 +178,27 @@ public class AutomationTests {
 		// out of bounds - should still stay at 0
 		slide_left(slider, 1);
 		colour_G = slider.getText();
-		assertEquals(colour_G, "0");
+		assertEquals("0", colour_G);
 		
 		slide_right(slider, 1);
 		colour_G = slider.getText();
-		assertEquals(colour_G, "1");
+		assertEquals("1", colour_G);
 
 		slide_right(slider, 254);
 		colour_G = slider.getText();
-		assertEquals(colour_G, "255");
+		assertEquals("255", colour_G);
 
 		// out of bounds - should still stay at 255
 		slide_right(slider, 1);
 		colour_G = slider.getText();
-		assertEquals(colour_G, "255");
+		assertEquals("255", colour_G);
 		
 		slide_left(slider, 1);
 		colour_G = slider.getText();
-		assertEquals(colour_G, "254");
+		assertEquals("254", colour_G);
 	}
 	
-//	@Test
+	@Test
 	public void change_new_project_blue_colour_in_UI() throws Exception{
 		start_new_project();
 
@@ -208,32 +207,32 @@ public class AutomationTests {
 
 		slide_right(slider, 1);
 		colour_B = slider.getText();
-		assertEquals(colour_B, "201");
+		assertEquals("201", colour_B);
 
 		slide_right(slider, 54);
 		colour_B = slider.getText();
-		assertEquals(colour_B, "255");
+		assertEquals("255", colour_B);
 
 		// out of bounds - should still stay at 255
 		slide_right(slider, 1);
 		colour_B = slider.getText();
-		assertEquals(colour_B, "255");
+		assertEquals("255", colour_B);
 
 		slide_left(slider, 1);
 		colour_B = slider.getText();
-		assertEquals(colour_B, "254");
+		assertEquals("254", colour_B);
 
 		slide_left(slider, 254);
 		colour_B = slider.getText();
-		assertEquals(colour_B, "0");
+		assertEquals("0", colour_B);
 
 		// out of bounds - should still stay at 0
 		slide_left(slider, 1);
 		colour_B = slider.getText();
-		assertEquals(colour_B, "0");
+		assertEquals("0", colour_B);
 	}
 	
-//	@Test
+	@Test
 	public void change_new_project_width_in_javascript() throws Exception{
 		start_new_project();
 		
@@ -242,32 +241,32 @@ public class AutomationTests {
 
 		slide_right(slider, 1);
 		width = js.executeScript("return get_layer_width();");
-    	assertEquals(width, 11L);
+    	assertEquals(11L, width);
 
 		slide_right(slider, 5);
 		width = js.executeScript("return get_layer_width();");
-    	assertEquals(width, 16L);
+    	assertEquals(16L, width);
 
 		// out of bounds - should still stay at 16
 		slide_right(slider, 1);
 		width = js.executeScript("return get_layer_width();");
-    	assertEquals(width, 16L);
+    	assertEquals(16L, width);
 
     	slide_left(slider, 1);
 		width = js.executeScript("return get_layer_width();");
-    	assertEquals(width, 15L);
+    	assertEquals(15L, width);
 
     	slide_left(slider, 14);
 		width = js.executeScript("return get_layer_width();");
-    	assertEquals(width, 1L);
+    	assertEquals(1L, width);
 
 		// out of bounds - should still stay at 1
     	slide_left(slider, 1);
 		width = js.executeScript("return get_layer_width();");
-    	assertEquals(width, 1L);
+    	assertEquals(1L, width);
 	}
 	
-//	@Test
+	@Test
 	public void change_new_project_red_colour_in_javascript() throws Exception{
 		start_new_project();
 		
@@ -276,32 +275,32 @@ public class AutomationTests {
 
 		slide_right(slider, 1);
 		colour_R = js.executeScript("return get_layer_colour_R();");
-    	assertEquals(colour_R, 201L);
+    	assertEquals(201L, colour_R);
 
 		slide_right(slider, 55);
 		colour_R = js.executeScript("return get_layer_colour_R();");
-    	assertEquals(colour_R, 255L);
+    	assertEquals(255L, colour_R);
 
 		// out of bounds - should still stay at 255
 		slide_right(slider, 1);
 		colour_R = js.executeScript("return get_layer_colour_R();");
-    	assertEquals(colour_R, 255L);
+    	assertEquals(255L, colour_R);
 
     	slide_left(slider, 1);
     	colour_R = js.executeScript("return get_layer_colour_R();");
-    	assertEquals(colour_R, 254L);
+    	assertEquals(254L, colour_R);
 
     	slide_left(slider, 254);
     	colour_R = js.executeScript("return get_layer_colour_R();");
-    	assertEquals(colour_R, 0L);
+    	assertEquals(0L, colour_R);
 
 		// out of bounds - should still stay at 0
     	slide_left(slider, 1);
     	colour_R = js.executeScript("return get_layer_colour_R();");
-    	assertEquals(colour_R, 0L);
+    	assertEquals(0L, colour_R);
 	}
 	
-//	@Test
+	@Test
 	public void change_new_project_green_colour_in_javascript() throws Exception{
 		start_new_project();
 		
@@ -311,27 +310,27 @@ public class AutomationTests {
 		// out of bounds - should still stay at 0
 		slide_left(slider, 1);
 		colour_G = js.executeScript("return get_layer_colour_G();");
-    	assertEquals(colour_G, 0L);
+    	assertEquals(0L, colour_G);
 
 		slide_right(slider, 1);
 		colour_G = js.executeScript("return get_layer_colour_G();");
-    	assertEquals(colour_G, 1L);
+    	assertEquals(1L, colour_G);
 
 		slide_right(slider, 254);
 		colour_G = js.executeScript("return get_layer_colour_G();");
-    	assertEquals(colour_G, 255L);
+    	assertEquals(255L, colour_G);
 
 		// out of bounds - should still stay at 255
     	slide_right(slider, 1);
     	colour_G = js.executeScript("return get_layer_colour_G();");
-    	assertEquals(colour_G, 255L);
+    	assertEquals(255L, colour_G);
 
     	slide_left(slider, 1);
     	colour_G = js.executeScript("return get_layer_colour_G();");
-    	assertEquals(colour_G, 254L);
+    	assertEquals(254L, colour_G);
 	}
 	
-//	@Test
+	@Test
 	public void change_new_project_blue_colour_in_javascript() throws Exception{
 		start_new_project();
 		
@@ -340,42 +339,42 @@ public class AutomationTests {
 
 		slide_right(slider, 1);
 		colour_B = js.executeScript("return get_layer_colour_B();");
-    	assertEquals(colour_B, 201L);
+    	assertEquals(201L, colour_B);
 
 		slide_right(slider, 55);
 		colour_B = js.executeScript("return get_layer_colour_B();");
-    	assertEquals(colour_B, 255L);
+    	assertEquals(255L, colour_B);
 
 		// out of bounds - should still stay at 255
 		slide_right(slider, 1);
 		colour_B = js.executeScript("return get_layer_colour_B();");
-    	assertEquals(colour_B, 255L);
+    	assertEquals(255L, colour_B);
 
     	slide_left(slider, 1);
     	colour_B = js.executeScript("return get_layer_colour_B();");
-    	assertEquals(colour_B, 254L);
+    	assertEquals(254L, colour_B);
 
     	slide_left(slider, 254);
     	colour_B = js.executeScript("return get_layer_colour_B();");
-    	assertEquals(colour_B, 0L);
+    	assertEquals(0L, colour_B);
 
 		// out of bounds - should still stay at 0
     	slide_left(slider, 1);
     	colour_B = js.executeScript("return get_layer_colour_B();");
-    	assertEquals(colour_B, 0L);
+    	assertEquals(0L, colour_B);
 	}
 	
-//	@Test
+	@Test
 	public void new_project_correctly_encoding_pixels_with_no_changes() throws Exception{
 		start_new_project();
 		
 		Object encoded_string;
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 	}
 	
-//	@Test
+	@Test
 	public void new_project_encoding_pixels_after_changing_width_for_different_layers() throws Exception{
 		start_new_project();
 		
@@ -386,27 +385,27 @@ public class AutomationTests {
 		slide_right(slider, 1);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,11,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,11,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 		
     	slide_left(slider, 2);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,9,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,9,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 
 		driver.findElement(By.id("layer_2")).click();
     	
     	slide_right(slider, 1);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,9,200,0,200,11,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,9,200,0,200,11,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
     	
     	slide_left(slider, 2);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,9,200,0,200,9,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,9,200,0,200,9,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 	}
 	
-//	@Test
+	@Test
 	public void new_project_encoding_pixels_after_changing_red_colour_for_different_layers() throws Exception{
 		start_new_project();
 		
@@ -417,27 +416,27 @@ public class AutomationTests {
 		slide_right(slider, 1);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,201,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,201,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 		
     	slide_left(slider, 2);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,199,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,199,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 
 		driver.findElement(By.id("layer_2")).click();
     	
     	slide_right(slider, 1);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,199,0,200,10,201,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,199,0,200,10,201,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
     	
     	slide_left(slider, 2);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,199,0,200,10,199,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,199,0,200,10,199,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 	}
 	
-//	@Test
+	@Test
 	public void new_project_encoding_pixels_after_changing_green_colour_for_different_layers() throws Exception{
 		start_new_project();
 		
@@ -448,27 +447,27 @@ public class AutomationTests {
 		slide_right(slider, 2);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,200,2,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,200,2,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 		
     	slide_left(slider, 1);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,200,1,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,200,1,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 
 		driver.findElement(By.id("layer_2")).click();
     	
     	slide_right(slider, 2);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,200,1,200,10,200,2,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,200,1,200,10,200,2,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
     	
     	slide_left(slider, 1);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,200,1,200,10,200,1,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,200,1,200,10,200,1,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 	}
 	
-//	@Test
+	@Test
 	public void new_project_encoding_pixels_after_changing_blue_colour_for_different_layers() throws Exception{
 		start_new_project();
 		
@@ -479,27 +478,27 @@ public class AutomationTests {
 		slide_right(slider, 1);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,200,0,201,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,200,0,201,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 		
     	slide_left(slider, 2);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,200,0,199,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,200,0,199,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 
 		driver.findElement(By.id("layer_2")).click();
     	
     	slide_right(slider, 1);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,200,0,199,10,200,0,201,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,200,0,199,10,200,0,201,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
     	
     	slide_left(slider, 2);
 		driver.findElement(By.id("run_button")).click();
 		encoded_string = js.executeScript("return encode_pixels();");
-    	assertEquals(encoded_string, "9,10,200,0,199,10,200,0,199,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200");
+    	assertEquals("9,10,200,0,199,10,200,0,199,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200,10,200,0,200", encoded_string);
 	}
 	
-//	@Test
+	@Test
 	public void new_project_save_no_project_name_warning() throws Exception{
 		start_new_project();
 		
@@ -513,10 +512,9 @@ public class AutomationTests {
 			alert.accept();
 		}
 		
-		assertEquals(alert_message, "Please choose a name for the project.");
+		assertEquals("Please choose a name for the project.", alert_message);
 	}
-	
-//	@Test
+
 	public void new_project_save_different_name_success() throws Exception{
 		start_new_project();
 		
@@ -533,7 +531,7 @@ public class AutomationTests {
 			alert.accept();
 		}
 		
-		assertEquals(alert_message, "Project saved.");
+		assertEquals("Project saved.", alert_message);
 	}
 	
 	@Test
@@ -542,32 +540,25 @@ public class AutomationTests {
 
 		Alert alert;
 		String alert_message = "";
-		String xpath = "//div[@class='project_title']";
-//		"/following-sibling::span[@class='project_delete_button_holder']/img[@class='project_delete_button']"+
-//		"]";
-//		contains(text(), 'spanText')
-		
-		
-    	driver.get(url_app + "index.php");
+		WebElement delete_button;
+		Boolean is_present;
+		String xpath = "//div[@class='project_title' and contains(text(), 'random_project_1')]/following-sibling::div[@class='project_delete_button_holder']/img[@class='project_delete_button']";
+
+    	driver.get(url_app + "dashboard.php");
     	
-		WebElement delete_button = driver.findElement(By.xpath(xpath));             
-//		delete_button.click();
-//		
-//		if (isAlertPresent()){
-//			alert = driver.switchTo().alert();
-//			alert_message = alert.getText();
-//			alert.accept();
-//		}
-//		
-//		assertEquals(alert_message, "Are you sure you want to delete this project?");
+		delete_button = driver.findElement(By.xpath(xpath));             
+		delete_button.click();
 		
-//		List<WebElement> delete_buttons = driver.findElements(By.xpath(xpath));             
-//		Boolean is_present = driver.findElements(By.xpath(xpath)).size() > 0;
-//		
-//		assertFalse(is_present);
+		if (isAlertPresent()){
+			alert = driver.switchTo().alert();
+			alert_message = alert.getText();
+			alert.accept();
+		}
+
+		assertEquals("Are you sure you want to delete this project?", alert_message);
+		is_present = driver.findElements(By.xpath(xpath)).size() > 0;
+		assertFalse(is_present);
 	}
-	
-	
 	
 	/* Helper methods */
 	private void slide_right(WebElement slider, int how_many){

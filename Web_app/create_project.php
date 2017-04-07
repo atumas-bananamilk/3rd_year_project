@@ -1,4 +1,11 @@
 <?php
+/*
+  Creator: Aivaras Tumas
+  The University of Manchester
+  School of Computer Science
+  3rd Year Project
+*/
+/* Handler to create a new project */
 
 if ( !isset($_SESSION) ){ 
 	session_start();
@@ -6,13 +13,10 @@ if ( !isset($_SESSION) ){
 
 require_once('queries.php');
 
-// define session by username
-$session_username = (isset($_SESSION['login_user']) ? $_SESSION['login_user'] : "");
-
 $layers = $_POST['layers'];
 
 // if logged in
-if (strlen($session_username) != 0){
+if (isset($_SESSION['login_user'])){
 	$all_layers = array();
 	for ($i = 0; $i < sizeof($layers); $i++){
 		$layer_info = array('username' => $_SESSION['login_user'],
@@ -26,7 +30,6 @@ if (strlen($session_username) != 0){
 	}
 
 	DBQuery::connect();
-
 	$all_layers_returned = DBQuery::get_all_layers_by_username( $_SESSION['login_user'] );
 	$projects = array();
 
@@ -39,6 +42,7 @@ if (strlen($session_username) != 0){
 		}
 	}
 
+	// check if user already has a project with this name
 	if ( in_array( $layers[0]['name'], $projects ) ){
 		echo "Project with this name already exists.";
 	}

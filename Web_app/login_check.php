@@ -1,10 +1,18 @@
 <?php
+/*
+  Creator: Aivaras Tumas
+  The University of Manchester
+  School of Computer Science
+  3rd Year Project
+*/
+/* Checking if user login details are correct (showing errors). */
+
 require_once('queries.php');
 
 $error='';
 
 if (isset($_POST['submitLogin'])){
-	// If username or password is empty.
+	// if username or password is empty
 	if ( empty($_POST['loginUsername']) || empty($_POST['loginPassword']) ){
 		$username_empty = false;
 		$password_empty = false;
@@ -30,6 +38,7 @@ if (isset($_POST['submitLogin'])){
 	else{
 		DBQuery::connect();
 		$username = mysqli_real_escape_string($conn, stripslashes( $_POST['loginUsername'] ));
+		// hash the typed in password (avoid comparing plain-text passwords)
 		$password = mysqli_real_escape_string($conn, stripslashes(hash( 'ripemd160', $_POST['loginPassword'] )));
 
 		$query = DBQuery::get_user_object($username, $password);
@@ -46,7 +55,6 @@ if (isset($_POST['submitLogin'])){
 		else{
 			$error = "Incorrect username or password.";
 		}
-
 		DBQuery::disconnect();
 	}
 }

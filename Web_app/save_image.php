@@ -1,4 +1,11 @@
 <?php
+/*
+  Creator: Aivaras Tumas
+  The University of Manchester
+  School of Computer Science
+  3rd Year Project
+*/
+/* Handler to insert/update project image. */
 
 if ( !isset($_SESSION) ){ 
 	session_start();
@@ -6,11 +13,8 @@ if ( !isset($_SESSION) ){
 
 require_once('queries.php');
 
-// define session by username
-$session_username = (isset($_SESSION['login_user']) ? $_SESSION['login_user'] : "");
-
 // if logged in
-if (strlen($session_username) != 0){
+if (isset($_SESSION['login_user'])){
 	$name = $_POST['name'];
 	$img = $_POST['img'];
 

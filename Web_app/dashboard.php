@@ -1,4 +1,11 @@
 <?php
+/*
+  Creator: Aivaras Tumas
+  The University of Manchester
+  School of Computer Science
+  3rd Year Project
+*/
+/* Dashboard page where users see all their projects and are able to delete them. */
 
 if ( !isset($_SESSION) ){ 
 	session_start();
@@ -6,10 +13,9 @@ if ( !isset($_SESSION) ){
 
 require_once('queries.php');
 
-// define session by username
-$session_username = (isset($_SESSION['login_user']) ? $_SESSION['login_user'] : "");
-
-echo "<html>";
+// if logged in
+if (isset($_SESSION['login_user'])){
+	echo "<html>";
 	echo "<head>";
 		echo "<meta charset='utf-8'>";
 		echo "<meta name='viewport' content='width=device-width'>";
@@ -20,58 +26,53 @@ echo "<html>";
 	  	echo "<script src='./main_scripts.js'></script>";
 	echo "</head>";
 	echo "<body>";
+	require_once('header.php');
 
-	// if logged in
-	if (strlen($session_username) != 0){
-		require_once('header.php');
+	echo "<div id='header'>";
+		echo "<div id='title'>3D POV Semi-Hologram</div>";
+		echo "<div id='logout_button' onclick='logout()'>LOGOUT</div>";
+	echo "</div>";
 
-		echo "<div id='header'>";
-			echo "<div id='title'>3D POV Semi-Hologram</div>";
-			echo "<div id='logout_button' onclick='logout()'>LOGOUT</div>";
-		echo "</div>";
+	echo "<div id='projects_dashboard'>";
 
-		echo "<div id='projects_dashboard'>";
+	echo "<div id='new_project' class='new_project_block' onclick='create_new_sketch()'>";
+		echo "<img id='add_new_project_logo' src='./images/add_new_project.png'></img>";
+	echo "</div>";
 
-		echo "<div id='new_project' class='new_project_block' onclick='create_new_sketch()'>";
-			echo "<img id='add_new_project_logo' src='./images/add_new_project.png'></img>";
-		echo "</div>";
+	DBQuery::connect();
 
-		DBQuery::connect();
+	$all_layers = DBQuery::get_all_layers_by_username( $_SESSION['login_user'] );
+	$projects = array();
 
-		$all_layers = DBQuery::get_all_layers_by_username( $_SESSION['login_user'] );
-		$projects = array();
-
-		// if database returns something
-		if (isset($all_layers)){
-			for ($i = 0; $i < sizeof($all_layers); $i++){
-				if ( !in_array( $all_layers[$i]['name'], $projects ) ){
-					array_push($projects, $all_layers[$i]['name']);
-				}
-			}
-
-			for ($i = 0; $i < sizeof($projects); $i++){
-				echo "<div class='project_block'>";
-					echo "<div class='project_top'>";
-						echo "<div class='project_title'>".$projects[$i]."</div>";
-						echo "<div class='project_delete_button_holder'>";
-							echo "<img class='project_delete_button' src='./images/delete.png' onclick='ask_to_delete_project(\"".$projects[$i]."\")'></img>";
-						echo "</div>";
-					echo "</div>";
-					$project_img = DBQuery::get_project_image( $_SESSION['login_user'], $projects[$i] );
-					echo "<div class='project_bottom' onclick='open_sketch(\"".$projects[$i]."\")'>";
-						echo "<img class='project_image' src='".$project_img[0]['image']."'></img>";
-					echo "</div>";
-				echo "</div>";
+	// if database returns something
+	if (isset($all_layers)){
+		for ($i = 0; $i < sizeof($all_layers); $i++){
+			if ( !in_array( $all_layers[$i]['name'], $projects ) ){
+				array_push($projects, $all_layers[$i]['name']);
 			}
 		}
 
-		DBQuery::disconnect();
-			
-		echo "</div>";
+		for ($i = 0; $i < sizeof($projects); $i++){
+			echo "<div class='project_block'>";
+				echo "<div class='project_top'>";
+					echo "<div class='project_title'>".$projects[$i]."</div>";
+					echo "<div class='project_delete_button_holder'>";
+						echo "<img class='project_delete_button' src='./images/delete.png' onclick='ask_to_delete_project(\"".$projects[$i]."\")'></img>";
+					echo "</div>";
+				echo "</div>";
+				$project_img = DBQuery::get_project_image( $_SESSION['login_user'], $projects[$i] );
+				echo "<div class='project_bottom' onclick='open_sketch(\"".$projects[$i]."\")'>";
+					echo "<img class='project_image' src='".$project_img[0]['image']."'></img>";
+				echo "</div>";
+			echo "</div>";
+		}
 	}
-	else{
-		header('Location: ./index.php');
-	}
+	DBQuery::disconnect();
 
+	echo "</div>";
 	echo "</body>";
-echo "</html>";
+	echo "</html>";
+}
+else{
+	header('Location: ./index.php');
+}

@@ -1,4 +1,12 @@
 <?php
+/*
+  Creator: Aivaras Tumas
+  The University of Manchester
+  School of Computer Science
+  3rd Year Project
+*/
+/* Checking if user register details are correct (showing errors). */
+
 require_once('queries.php');
 
 $error='';
@@ -30,6 +38,7 @@ if (isset($_POST['submit_register'])){
 	else{
 		DBQuery::connect();
 		$username = mysqli_real_escape_string($conn, stripslashes( $_POST['loginUsername'] ));
+		// hash the typed in password (avoid storing plain-text passwords)
 		$password = mysqli_real_escape_string($conn, stripslashes(hash( 'ripemd160', $_POST['loginPassword'] )));
 
 		$query = DBQuery::register_user($username, $password);
@@ -49,4 +58,3 @@ if (isset($_POST['submit_register'])){
 		DBQuery::disconnect();
 	}
 }
-?>

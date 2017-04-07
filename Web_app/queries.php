@@ -1,4 +1,17 @@
 <?php
+/*
+  Creator: Aivaras Tumas
+  The University of Manchester
+  School of Computer Science
+  3rd Year Project
+*/
+/* Handler for all database interactions. */
+/*
+	NOTE: the queries are non-parameterized because we do not focus on the 
+	SECURITY of the system, but on the DATA it is working on while creating 
+	and updating shapes (emphasis on unit & automation testing).
+*/
+
 class DBQuery
 {
 	private static $servername = "localhost";

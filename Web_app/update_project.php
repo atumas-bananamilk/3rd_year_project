@@ -1,4 +1,11 @@
 <?php
+/*
+  Creator: Aivaras Tumas
+  The University of Manchester
+  School of Computer Science
+  3rd Year Project
+*/
+/* Handler to update the project info. */
 
 if ( !isset($_SESSION) ){ 
 	session_start();
@@ -6,14 +13,11 @@ if ( !isset($_SESSION) ){
 
 require_once('queries.php');
 
-// define session by username
-$session_username = (isset($_SESSION['login_user']) ? $_SESSION['login_user'] : "");
-
 $layers = $_POST['layers'];
 $previous_name = $_POST['previous_name'];
 
 // if logged in
-if (strlen($session_username) != 0){
+if (isset($_SESSION['login_user'])){
 	$all_layers = array();
 	for ($i = 0; $i < sizeof($layers); $i++){
 		$layer_info = array('username' => $_SESSION['login_user'],
@@ -40,9 +44,7 @@ if (strlen($session_username) != 0){
 		}
 	}
 
-	// if ( strcmp($previous_name, $layers[0]['name']) == 0 ){
-	// 	echo "Project with this name already exists.";
-	// }
+	// if project name is unchanged and project has already been created by this user
 	if ( strcmp($previous_name, $layers[0]['name']) != 0 && in_array( $layers[0]['name'], $projects ) ){
 		echo "Project with this name already exists.";
 	}

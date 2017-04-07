@@ -1,3 +1,9 @@
+/*
+  Creator: Aivaras Tumas
+  The University of Manchester
+  School of Computer Science
+  3rd Year Project
+*/
 @font-face {
     font-family: raleway_thin;
     src: url("./fonts/Raleway-Thin.ttf");
@@ -20,7 +26,6 @@ body{
     padding: 0%;
 	position: absolute;
     overflow-x: hidden;
-	/*background-color: #BFBFBF;*/
 	background-color: #222222;
     text-align: center;
     color: #FFFFFF;
