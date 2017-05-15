@@ -4,6 +4,23 @@ School of Computer Science
 3rd Year Project
 
 --------------------------------------------------------------------
+ABOUT
+--------------------------------------------------------------------
+3D POV Semi-Hologram
+
+How it works:
+1.	A user creates his/her own 3D shape designs on the web application
+2.	After the design has been finished, click RUN
+3. 	The design is uploaded onto the system and draws 3D shapes
+4.	Done!
+
+--------------------------------------------------------------------
+MORE INFO
+--------------------------------------------------------------------
+Report - Report.pdf
+Project Screencast - https://goo.gl/x2LcSh
+
+--------------------------------------------------------------------
 RUNNING TESTS:
 --------------------------------------------------------------------
 Tests (unit, automation) are only done on the browser-side 
