@@ -9,16 +9,17 @@ ABOUT
 3D POV Semi-Hologram
 
 How it works:
-1.	A user creates his/her own 3D shape designs on the web application
-2.	After the design has been finished, click RUN
-3. 	The design is uploaded onto the system and draws 3D shapes
-4.	Done!
+1.  A user creates his 3D shape designs on the web application
+2.  After the design has been finished, click RUN
+3.  The design is uploaded onto the system which draws 3D holograms
+
 
 --------------------------------------------------------------------
 MORE INFO
 --------------------------------------------------------------------
 Report - Report.pdf
-Project Screencast - https://goo.gl/x2LcSh
+Screencast - https://goo.gl/x2LcSh
+
 
 --------------------------------------------------------------------
 RUNNING TESTS:
